@@ -102,25 +102,26 @@ export function Contact() {
 
             <div className="flex gap-4">
               <a
-                href="https://github.com/yourusername"
+                href="https://github.com/R4zor08"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="GitHub Profile"
                 className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-300 hover:bg-purple-600 hover:text-white transition-all duration-300 border border-white/10 hover:border-purple-500">
                 
                 <Github size={18} />
               </a>
               <a
-                href="https://linkedin.com/in/yourusername"
+                href="https://linkedin.com/in/ryan-llanto"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="LinkedIn Profile"
                 className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-300 hover:bg-purple-600 hover:text-white transition-all duration-300 border border-white/10 hover:border-purple-500">
                 
                 <Linkedin size={18} />
               </a>
               <a
-                href="https://yourportfolio.com"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#home"
+                aria-label="Back to Top"
                 className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-gray-300 hover:bg-purple-600 hover:text-white transition-all duration-300 border border-white/10 hover:border-purple-500">
                 
                 <Globe size={18} />

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Github, Linkedin, Mail } from 'lucide-react';
 export function Footer() {
   return (
@@ -9,7 +8,7 @@ export function Footer() {
             <a
               href="#home"
               className="text-2xl font-heading font-bold text-white tracking-tight flex items-center gap-1 mb-4">
-              
+
               Ryan<span className="text-purple-500">.dev</span>
             </a>
             <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
@@ -25,11 +24,11 @@ export function Footer() {
             <ul className="space-y-2">
               {['Home', 'About', 'Skills', 'Projects', 'Services', 'Contact'].map(
                 (link) =>
-                <li key={link}>
+                  <li key={link}>
                     <a
-                    href={`#${link.toLowerCase()}`}
-                    className="text-gray-400 hover:text-purple-400 text-sm transition-colors">
-                    
+                      href={`#${link.toLowerCase()}`}
+                      className="text-gray-400 hover:text-purple-400 text-sm transition-colors">
+
                       {link}
                     </a>
                   </li>
@@ -44,25 +43,27 @@ export function Footer() {
             </h4>
             <div className="flex gap-4 justify-center md:justify-start">
               <a
-                href="https://github.com/yourusername"
+                href="https://github.com/R4zor08"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="GitHub Profile"
                 className="text-gray-400 hover:text-purple-400 transition-colors">
-                
+
                 <Github size={20} />
               </a>
               <a
-                href="https://linkedin.com/in/yourusername"
+                href="https://linkedin.com/in/ryan-llanto"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="LinkedIn Profile"
                 className="text-gray-400 hover:text-purple-400 transition-colors">
-                
+
                 <Linkedin size={20} />
               </a>
               <a
                 href="mailto:ryanllanto44@gmail.com"
                 className="text-gray-400 hover:text-purple-400 transition-colors">
-                
+
                 <Mail size={20} />
               </a>
             </div>

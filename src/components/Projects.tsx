@@ -1,60 +1,85 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink, Github, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ExternalLink, Github } from 'lucide-react';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 
 type Project = {
+  id: string;
   title: string;
+  subtitle: string;
   description: string;
   category: string;
   image: string;
   logo?: string;
   link?: string;
   github?: string;
+  technologies: string[];
 };
 
 const projects: Project[] = [
   {
+    id: 'citezen',
     title: 'CITEzen',
+    subtitle: 'Student Concern System',
     description:
       'A Student Concern Management System designed to simplify the submission, tracking, and management of student concerns through a centralized digital platform.',
     category: 'WEB APP / STUDENT SYSTEM',
     image: '/1.png',
+    technologies: ['React.js', 'Tailwind CSS', 'Node.js', 'Express', 'MySQL'],
+    github: 'https://github.com/R4zor08/CITEzen',
+    link: 'https://citezen-demo.vercel.app',
   },
   {
+    id: 'nemsutalks',
     title: 'NEMSUTalks',
+    subtitle: 'AI Sentiment Analysis',
     description:
       'A Student Sentiment Analysis System that leverages AI to collect, analyze, and manage student feedback for better communication and decision-making.',
     category: 'AI / SENTIMENT ANALYSIS',
     image: '/2.png',
+    technologies: ['Python', 'Django', 'React.js', 'Tailwind CSS', 'NLP / AI'],
+    github: 'https://github.com/R4zor08/NEMSUTalks',
+    link: 'https://nemsutalks.vercel.app',
   },
   {
+    id: 'fireguard3',
     title: 'FIREGUARD3',
+    subtitle: 'IoT Fire Safety',
     description:
       'An IoT-based Fire Alarm Monitoring System that provides real-time alerts and monitoring to improve safety and emergency response.',
     category: 'IOT / FIRE SAFETY',
     image: '/3.png',
+    technologies: ['Flutter', 'Dart', 'IoT Sensors', 'Node.js', 'MongoDB'],
+    github: 'https://github.com/R4zor08/FIREGUARD3',
+    link: 'https://fireguard3.vercel.app',
   },
   {
+    id: 'wheelgo',
     title: 'WheelGo',
+    subtitle: 'Car Rental Platform',
     description:
       'A Car Rental Management System that streamlines vehicle reservations and fleet management through a modern web application.',
     category: 'WEB APP / CAR RENTAL',
     image: '/1.png',
+    technologies: ['React.js', 'Tailwind CSS', 'Node.js', 'SQLite', 'REST API'],
+    github: 'https://github.com/R4zor08/WheelGo',
+    link: 'https://wheelgo.vercel.app',
   },
   {
+    id: 'washgo',
     title: 'WashGO',
+    subtitle: 'Car Wash Booking App',
     description:
       'A Car Wash Booking Mobile App designed to simplify car wash appointments, service booking, customer management, and booking status tracking through a convenient mobile platform.',
     category: 'MOBILE APP / BOOKING',
     image: '/2.png',
+    technologies: ['Flutter', 'Dart', 'Node.js', 'Express', 'MongoDB'],
     github: 'https://github.com/R4zor08/WashGO',
+    link: 'https://washgo.vercel.app',
   },
 ];
 
-const AUTO_ADVANCE_MS = 5000;
-const ANGLE_STEP = 360 / projects.length;
-const RADIUS = 430;
+const AUTOPLAY_INTERVAL_MS = 4500;
 
 function getInitials(title: string) {
   return title
@@ -66,184 +91,119 @@ function getInitials(title: string) {
     .toUpperCase();
 }
 
-function ProjectBranding({ project }: { project: Project }) {
-  const subtitle = project.category.split('/')[0]?.trim() ?? 'PROJECT';
-
-  return (
-    <div className="absolute top-3 left-3 md:top-6 md:left-6 z-20 flex items-center gap-2 md:gap-3">
-      {project.logo ? (
-        <img
-          src={project.logo}
-          alt=""
-          className="w-10 h-10 md:w-12 md:h-12 object-contain drop-shadow-[0_0_12px_rgba(139,92,246,0.6)]"
-        />
-      ) : (
-        <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-300 font-heading font-bold text-sm md:text-base shadow-[0_0_20px_rgba(139,92,246,0.3)]">
-          {getInitials(project.title)}
-        </div>
-      )}
-      <div className="flex flex-col leading-tight">
-        <span className="font-heading font-bold text-white text-xs md:text-base tracking-wide uppercase">
-          {project.title.replace(/\s/g, '')}
-        </span>
-        <span className="text-[10px] md:text-xs text-purple-400/80 tracking-[0.2em] uppercase">
-          {subtitle}
-        </span>
-      </div>
-    </div>
-  );
-}
-
-function DeviceMockups({ image, title }: { image: string; title: string }) {
-  return (
-    <div className="relative w-full h-full flex items-center justify-center md:justify-end md:pr-4 pt-10 sm:pt-8 md:pt-0">
-      {/* Laptop */}
-      <div className="relative z-10 w-[85%] max-w-[260px] sm:max-w-[320px] md:max-w-[380px] -rotate-2 translate-x-2 md:translate-x-0">
-        <div className="rounded-xl border border-white/15 bg-[#0a0a12] shadow-[0_20px_60px_rgba(0,0,0,0.5),0_0_40px_rgba(139,92,246,0.2)] overflow-hidden">
-          <div className="h-6 md:h-7 bg-white/5 border-b border-white/10 flex items-center px-3 gap-1.5">
-            <div className="w-2 h-2 rounded-full bg-red-500/60" />
-            <div className="w-2 h-2 rounded-full bg-yellow-500/60" />
-            <div className="w-2 h-2 rounded-full bg-green-500/60" />
-          </div>
-          <div className="relative aspect-[16/10] bg-gradient-to-br from-[#13082a] to-[#050505]">
-            <img
-              src={image}
-              alt={`${title} desktop preview`}
-              className="w-full h-full object-cover opacity-90"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/60 via-transparent to-transparent" />
-          </div>
-        </div>
-        <div className="mx-auto w-[90%] h-2 bg-gradient-to-b from-gray-700/80 to-gray-900 rounded-b-lg" />
-      </div>
-
-      {/* Phone */}
-      <div className="absolute right-0 md:right-2 bottom-0 md:bottom-4 z-20 w-[28%] max-w-[70px] sm:max-w-[90px] md:max-w-[100px] rotate-6">
-        <div className="rounded-[1.25rem] border-2 border-white/15 bg-[#0a0a12] p-1 shadow-[0_10px_40px_rgba(0,0,0,0.5),0_0_25px_rgba(139,92,246,0.25)]">
-          <div className="rounded-[1rem] overflow-hidden aspect-[9/19] bg-gradient-to-br from-[#13082a] to-[#050505]">
-            <img
-              src={image}
-              alt={`${title} mobile preview`}
-              className="w-full h-full object-cover opacity-90"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function ProjectCard({
   project,
   isActive,
+  onSelect,
 }: {
   project: Project;
   isActive: boolean;
+  onSelect: () => void;
 }) {
   return (
     <div
-      className={`w-full md:h-full min-h-0 md:min-h-[480px] rounded-3xl overflow-hidden flex flex-col transition-all duration-700 border bg-gradient-to-b from-[#0d0618] via-[#080812] to-[#050505] ${
+      onClick={onSelect}
+      tabIndex={isActive ? 0 : -1}
+      role="group"
+      aria-roledescription="slide"
+      aria-label={project.title}
+      className={`relative w-full h-full rounded-[2.25rem] overflow-hidden flex flex-col justify-end transition-all duration-500 border select-none cursor-pointer group ${
         isActive
-          ? 'border-purple-500/50 shadow-[0_0_60px_rgba(139,92,246,0.25)] opacity-100'
-          : 'border-white/5 opacity-50 brightness-50'
-      }`}
-      aria-hidden={!isActive}>
-      {/* Top: branding + device mockups */}
-      <div className="relative flex-1 min-h-[200px] md:min-h-[240px] overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 md:w-80 md:h-80 bg-purple-600/25 rounded-full blur-[80px] pointer-events-none" />
-        <ProjectBranding project={project} />
-        <DeviceMockups image={project.image} title={project.title} />
+          ? 'border-purple-500/60 shadow-[0_0_60px_rgba(139,92,246,0.35),0_20px_50px_rgba(0,0,0,0.9)] ring-1 ring-purple-500/40'
+          : 'border-white/10 shadow-[0_15px_35px_rgba(0,0,0,0.7)] hover:border-purple-500/40'
+      }`}>
+      {/* Full-bleed Cover Image Background (Voyager2 Style) */}
+      <div className="absolute inset-0 z-0 bg-[#0a0518] overflow-hidden">
+        <img
+          src={project.image}
+          alt={project.title}
+          className={`w-full h-full object-cover transition-transform duration-700 ease-out ${
+            isActive ? 'scale-105 group-hover:scale-110' : 'scale-100 opacity-75'
+          }`}
+          loading="lazy"
+        />
+        {/* Subtle dark gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/75 to-black/30 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-transparent z-10" />
       </div>
 
-      {/* Bottom: meta + description + actions */}
-      <div className="p-5 md:p-8 flex flex-col gap-3 md:gap-4 border-t border-white/5 bg-[#0b0614]/90 backdrop-blur-sm">
-        <span className="inline-block w-fit max-w-full px-3 sm:px-4 py-1.5 rounded-full text-[9px] sm:text-[10px] md:text-xs font-bold tracking-widest uppercase bg-purple-500/15 text-purple-300 border border-purple-500/30 break-words">
-          {project.category}
-        </span>
+      {/* Top Header inside Card */}
+      <div className="relative z-20 p-5 sm:p-6 flex items-center justify-between mb-auto">
+        <div className="flex items-center gap-2.5">
+          {project.logo ? (
+            <img
+              src={project.logo}
+              alt=""
+              className="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-[0_0_12px_rgba(139,92,246,0.6)]"
+              loading="lazy"
+            />
+          ) : (
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-black/40 border border-purple-500/40 flex items-center justify-center text-purple-300 font-heading font-bold text-xs sm:text-sm shadow-md backdrop-blur-md">
+              {getInitials(project.title)}
+            </div>
+          )}
+          <span className="text-[10px] sm:text-xs font-bold tracking-widest uppercase bg-purple-500/20 text-purple-300 border border-purple-500/40 px-3 py-1 rounded-full backdrop-blur-md">
+            {project.category}
+          </span>
+        </div>
 
-        <h3 className="text-2xl md:text-4xl font-heading font-bold text-white tracking-tight">
+        <span className="text-[10px] sm:text-xs font-mono font-bold text-gray-300 bg-black/50 border border-white/10 px-2.5 py-1 rounded-full backdrop-blur-md">
+          {project.subtitle}
+        </span>
+      </div>
+
+      {/* Overlaid Bottom Content */}
+      <div className="relative z-20 p-5 sm:p-7 flex flex-col gap-3 bg-gradient-to-t from-[#050505] via-[#050505]/95 to-transparent pt-10">
+        <h3
+          className="font-heading font-bold text-white tracking-tight leading-snug drop-shadow-md"
+          style={{ fontSize: 'clamp(1.4rem, 4vw, 2.1rem)' }}>
           {project.title}
         </h3>
 
-        <p className="text-gray-300 text-sm md:text-base leading-relaxed">
+        <p className="text-gray-300 text-xs sm:text-sm leading-relaxed line-clamp-3 font-normal opacity-90 drop-shadow">
           {project.description}
         </p>
 
-        {(project.link || project.github) && (
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
-            {project.link && (
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                tabIndex={isActive ? 0 : -1}
-                className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-full text-sm font-medium text-white bg-gradient-glow hover:-translate-y-0.5 transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500">
-                View Project <ExternalLink size={16} />
-              </a>
-            )}
-            {project.github && (
-              <a
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                tabIndex={isActive ? 0 : -1}
-                className="flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2.5 rounded-full text-sm font-medium text-gray-300 glass-card border border-white/10 hover:border-purple-500/50 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
-                aria-label={`View ${project.title} on GitHub`}>
-                <Github size={18} />
-                GitHub
-              </a>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
+        {/* Tech Stack Pills */}
+        <div className="flex flex-wrap gap-1.5 pt-1">
+          {project.technologies.map((tech) => (
+            <span
+              key={tech}
+              className="text-[10px] sm:text-xs px-2.5 py-1 rounded-lg bg-black/50 border border-white/15 text-purple-200 font-medium tracking-wide backdrop-blur-md">
+              {tech}
+            </span>
+          ))}
+        </div>
 
-function CarouselControls({
-  activeIndex,
-  onPrev,
-  onNext,
-  onGoTo,
-  count,
-}: {
-  activeIndex: number;
-  onPrev: () => void;
-  onNext: () => void;
-  onGoTo: (index: number) => void;
-  count: number;
-}) {
-  return (
-    <div className="flex items-center justify-center gap-6 sm:gap-8 mt-8 md:mt-10 relative z-10">
-      <button
-        type="button"
-        onClick={onPrev}
-        className="w-10 h-10 rounded-full flex items-center justify-center glass-card hover:bg-white/10 text-gray-300 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
-        aria-label="Previous project">
-        <ChevronLeft size={20} />
-      </button>
-      <div className="flex items-center gap-3">
-        {Array.from({ length: count }).map((_, index) => (
-          <button
-            key={index}
-            type="button"
-            onClick={() => onGoTo(index)}
-            aria-label={`Go to project ${index + 1}`}
-            className={`transition-all duration-300 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 ${
-              index === activeIndex
-                ? 'w-8 h-2 bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.8)]'
-                : 'w-2 h-2 bg-white/20 hover:bg-white/40'
-            }`}
-          />
-        ))}
+        {/* Action Buttons */}
+        <div className="flex flex-wrap items-center gap-2.5 pt-2">
+          {project.link && (
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              tabIndex={isActive ? 0 : -1}
+              onClick={(e) => e.stopPropagation()}
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold text-white bg-gradient-glow hover:-translate-y-0.5 transition-all shadow-[0_0_20px_rgba(139,92,246,0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500">
+              Live Demo <ExternalLink size={14} />
+            </a>
+          )}
+
+          {project.github && (
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              tabIndex={isActive ? 0 : -1}
+              onClick={(e) => e.stopPropagation()}
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold text-gray-200 bg-black/50 backdrop-blur-md border border-white/20 hover:border-purple-500/60 hover:text-white hover:-translate-y-0.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
+              aria-label={`View ${project.title} source code on GitHub`}>
+              <Github size={15} />
+              GitHub
+            </a>
+          )}
+        </div>
       </div>
-      <button
-        type="button"
-        onClick={onNext}
-        className="w-10 h-10 rounded-full flex items-center justify-center glass-card hover:bg-white/10 text-gray-300 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
-        aria-label="Next project">
-        <ChevronRight size={20} />
-      </button>
     </div>
   );
 }
@@ -251,91 +211,358 @@ function CarouselControls({
 export function Projects() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const isDesktop = useMediaQuery('(min-width: 768px)');
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+  const isTablet = useMediaQuery('(min-width: 768px) and (max-width: 1023px)');
+  const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
 
-  const next = () => setCurrentIndex((prev) => prev + 1);
-  const prev = () => setCurrentIndex((prev) => prev - 1);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const dragStartPos = useRef<{ x: number; y: number } | null>(null);
+  const isSwipingHorizontal = useRef<boolean | null>(null);
+  const isMouseDown = useRef<boolean>(false);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const goToProject = (index: number) => {
-    setCurrentIndex((prev) => {
-      const base = ((prev % projects.length) + projects.length) % projects.length;
-      let diff = index - base;
-      if (diff > projects.length / 2) diff -= projects.length;
-      if (diff < -projects.length / 2) diff += projects.length;
-      return prev + diff;
-    });
-  };
+  const projectCount = projects.length;
+
+  const next = useCallback(() => {
+    setCurrentIndex((prev) => prev + 1);
+  }, []);
+
+  const prev = useCallback(() => {
+    setCurrentIndex((prev) => prev - 1);
+  }, []);
+
+  const goToProject = useCallback(
+    (index: number) => {
+      setCurrentIndex((prev) => {
+        const active = ((prev % projectCount) + projectCount) % projectCount;
+        let diff = index - active;
+        if (diff > projectCount / 2) diff -= projectCount;
+        if (diff < -projectCount / 2) diff += projectCount;
+        return prev + diff;
+      });
+    },
+    [projectCount]
+  );
+
+  // Restart autoplay timer from current project
+  const restartAutoplayTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    if (isPaused || prefersReducedMotion) return;
+
+    timerRef.current = setInterval(() => {
+      next();
+    }, AUTOPLAY_INTERVAL_MS);
+  }, [isPaused, prefersReducedMotion, next]);
+
+  // Handle autoplay interval & tab visibility
+  useEffect(() => {
+    restartAutoplayTimer();
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [restartAutoplayTimer, currentIndex]);
 
   useEffect(() => {
-    if (isPaused) return;
-    const timer = setInterval(() => setCurrentIndex((prev) => prev + 1), AUTO_ADVANCE_MS);
-    return () => clearInterval(timer);
-  }, [isPaused, currentIndex]);
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        setIsPaused(true);
+      } else {
+        setIsPaused(false);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
 
-  const activeIndex =
-    ((currentIndex % projects.length) + projects.length) % projects.length;
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!carouselRef.current) return;
+      const rect = carouselRef.current.getBoundingClientRect();
+      const inView = rect.top < window.innerHeight && rect.bottom > 0;
+      if (!inView) return;
+
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prev();
+        restartAutoplayTimer();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        next();
+        restartAutoplayTimer();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [next, prev, restartAutoplayTimer]);
+
+  // Touch Swipe Gesture Handler (Preventing vertical scroll interferences)
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    dragStartPos.current = { x: touch.clientX, y: touch.clientY };
+    isSwipingHorizontal.current = null;
+    setIsPaused(true);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!dragStartPos.current) return;
+    const touch = e.touches[0];
+    const deltaX = touch.clientX - dragStartPos.current.x;
+    const deltaY = touch.clientY - dragStartPos.current.y;
+
+    if (isSwipingHorizontal.current === null) {
+      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 8) {
+        isSwipingHorizontal.current = true;
+      } else if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > 8) {
+        isSwipingHorizontal.current = false;
+      }
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!dragStartPos.current) return;
+    const touch = e.changedTouches[0];
+    const deltaX = touch.clientX - dragStartPos.current.x;
+
+    if (isSwipingHorizontal.current === true && Math.abs(deltaX) > 35) {
+      if (deltaX < 0) {
+        next();
+      } else {
+        prev();
+      }
+    }
+    dragStartPos.current = null;
+    isSwipingHorizontal.current = null;
+    setIsPaused(false);
+    restartAutoplayTimer();
+  };
+
+  // Mouse Drag Handler
+  const handleMouseDown = (e: React.MouseEvent) => {
+    dragStartPos.current = { x: e.clientX, y: e.clientY };
+    isMouseDown.current = true;
+    setIsPaused(true);
+  };
+
+  const handleMouseUp = (e: React.MouseEvent) => {
+    if (!isMouseDown.current || !dragStartPos.current) return;
+    const deltaX = e.clientX - dragStartPos.current.x;
+    if (Math.abs(deltaX) > 35) {
+      if (deltaX < 0) {
+        next();
+      } else {
+        prev();
+      }
+    }
+    isMouseDown.current = false;
+    dragStartPos.current = null;
+    setIsPaused(false);
+    restartAutoplayTimer();
+  };
+
+  const handleMouseLeave = () => {
+    isMouseDown.current = false;
+    dragStartPos.current = null;
+    setIsPaused(false);
+    restartAutoplayTimer();
+  };
+
+  // Mouse Wheel / Trackpad Gesture Handler
+  const handleWheel = (e: React.WheelEvent) => {
+    const deltaX = e.deltaX;
+    const deltaY = e.deltaY;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 18) {
+      setIsPaused(true);
+      if (deltaX > 0) {
+        next();
+      } else {
+        prev();
+      }
+      setTimeout(() => {
+        setIsPaused(false);
+        restartAutoplayTimer();
+      }, 500);
+    }
+  };
+
+  const activeIndex = ((currentIndex % projectCount) + projectCount) % projectCount;
+
+  // Compute 3D Cover Flow properties for Voyager2 card layout
+  const getCardStyle = (index: number) => {
+    let dist = index - activeIndex;
+    if (dist > projectCount / 2) dist -= projectCount;
+    if (dist < -projectCount / 2) dist += projectCount;
+
+    if (!isDesktop && !isTablet) {
+      // Mobile horizontal sliding
+      return {
+        transform: `translateX(${dist * 105}%) scale(${dist === 0 ? 1 : 0.88})`,
+        opacity: dist === 0 ? 1 : dist === -1 || dist === 1 ? 0.35 : 0,
+        zIndex: dist === 0 ? 30 : 10,
+        filter: dist === 0 ? 'brightness(1) blur(0px)' : 'brightness(0.6) blur(2px)',
+        pointerEvents: (dist === 0 ? 'auto' : 'none') as React.CSSProperties['pointerEvents'],
+      };
+    }
+
+    if (isTablet) {
+      // Tablet perspective
+      if (dist === 0) {
+        return {
+          transform: 'translateX(0%) scale(1) rotateY(0deg)',
+          opacity: 1,
+          zIndex: 30,
+          filter: 'brightness(1) blur(0px)',
+          pointerEvents: 'auto' as React.CSSProperties['pointerEvents'],
+        };
+      } else if (dist === -1) {
+        return {
+          transform: 'translateX(-65%) scale(0.82) rotateY(25deg)',
+          opacity: 0.55,
+          zIndex: 20,
+          filter: 'brightness(0.65) blur(1px)',
+          pointerEvents: 'auto' as React.CSSProperties['pointerEvents'],
+        };
+      } else if (dist === 1) {
+        return {
+          transform: 'translateX(65%) scale(0.82) rotateY(-25deg)',
+          opacity: 0.55,
+          zIndex: 20,
+          filter: 'brightness(0.65) blur(1px)',
+          pointerEvents: 'auto' as React.CSSProperties['pointerEvents'],
+        };
+      } else {
+        return {
+          transform: `translateX(${dist > 0 ? 115 : -115}%) scale(0.65) rotateY(${dist > 0 ? -40 : 40}deg)`,
+          opacity: 0,
+          zIndex: 5,
+          filter: 'brightness(0.4) blur(4px)',
+          pointerEvents: 'none' as React.CSSProperties['pointerEvents'],
+        };
+      }
+    }
+
+    // Desktop 3D Cover Flow (Voyager2 Style)
+    if (dist === 0) {
+      return {
+        transform: 'translateX(0%) scale(1) rotateY(0deg)',
+        opacity: 1,
+        zIndex: 30,
+        filter: 'brightness(1) blur(0px)',
+        pointerEvents: 'auto' as React.CSSProperties['pointerEvents'],
+      };
+    } else if (dist === -1) {
+      return {
+        transform: 'translateX(-75%) scale(0.82) rotateY(35deg)',
+        opacity: 0.58,
+        zIndex: 20,
+        filter: 'brightness(0.7) blur(0px)',
+        pointerEvents: 'auto' as React.CSSProperties['pointerEvents'],
+      };
+    } else if (dist === 1) {
+      return {
+        transform: 'translateX(75%) scale(0.82) rotateY(-35deg)',
+        opacity: 0.58,
+        zIndex: 20,
+        filter: 'brightness(0.7) blur(0px)',
+        pointerEvents: 'auto' as React.CSSProperties['pointerEvents'],
+      };
+    } else if (dist === -2) {
+      return {
+        transform: 'translateX(-135%) scale(0.66) rotateY(50deg)',
+        opacity: 0.22,
+        zIndex: 10,
+        filter: 'brightness(0.4) blur(1px)',
+        pointerEvents: 'auto' as React.CSSProperties['pointerEvents'],
+      };
+    } else if (dist === 2) {
+      return {
+        transform: 'translateX(135%) scale(0.66) rotateY(-50deg)',
+        opacity: 0.22,
+        zIndex: 10,
+        filter: 'brightness(0.4) blur(1px)',
+        pointerEvents: 'auto' as React.CSSProperties['pointerEvents'],
+      };
+    } else {
+      return {
+        transform: `translateX(${dist > 0 ? 170 : -170}%) scale(0.5) rotateY(${dist > 0 ? -60 : 60}deg)`,
+        opacity: 0,
+        zIndex: 0,
+        filter: 'brightness(0.2) blur(5px)',
+        pointerEvents: 'none' as React.CSSProperties['pointerEvents'],
+      };
+    }
+  };
 
   return (
-    <section id="projects" className="pt-10 pb-16 sm:pb-20 relative bg-[#080812] overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[50%] bg-purple-600/10 rounded-full blur-[160px] pointer-events-none" />
+    <section
+      id="projects"
+      className="py-16 sm:py-24 relative bg-[#080812] overflow-hidden select-none"
+      ref={carouselRef}>
+      {/* Background Lighting & Glows */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[75vw] h-[65vh] bg-purple-600/10 rounded-full blur-[170px] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-violet-600/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-900/15 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 md:px-12 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 relative z-10">
+        {/* Header Title Only (No visible controls, progress bars, or counters) */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-16 md:mb-20 text-center relative z-20">
-          <h2 className="text-3xl md:text-5xl font-heading font-bold mb-4">
+          transition={{ duration: 0.6 }}
+          className="mb-8 sm:mb-12 text-center relative z-20 flex flex-col items-center">
+          <h2
+            className="font-heading font-bold text-white tracking-tight"
+            style={{ fontSize: 'clamp(2rem, 5vw, 4rem)' }}>
             Featured <span className="text-gradient">Projects</span>
           </h2>
-          <div className="w-20 h-1 bg-purple-500 rounded-full mx-auto" />
         </motion.div>
 
+        {/* 3D Cover Flow Carousel Container */}
         <div
-          className="relative w-full mt-6 md:mt-10"
+          className="relative w-full mt-4 sm:mt-6 pb-4 overflow-hidden touch-pan-y"
           onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}>
-          <div className="absolute w-2/3 h-2/3 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-purple-600/20 rounded-full blur-[120px] pointer-events-none" />
+          onMouseLeave={handleMouseLeave}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onWheel={handleWheel}>
+          {/* Main 3D Perspective Wrapper */}
+          <div className="relative w-full h-[520px] sm:h-[560px] md:h-[580px] flex items-center justify-center [perspective:1400px]">
+            {projects.map((project, index) => {
+              const cardStyle = getCardStyle(index);
+              let dist = index - activeIndex;
+              if (dist > projectCount / 2) dist -= projectCount;
+              if (dist < -projectCount / 2) dist += projectCount;
+              const isActive = dist === 0;
 
-          {isDesktop ? (
-            <div className="relative w-full h-[500px] flex items-center justify-center [perspective:1800px]">
-              <motion.div
-                className="relative w-[82vw] max-w-[640px] h-full [transform-style:preserve-3d]"
-                animate={{ rotateY: -currentIndex * ANGLE_STEP }}
-                transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}>
-                {projects.map((project, index) => {
-                  let dist = index - activeIndex;
-                  if (dist > projects.length / 2) dist -= projects.length;
-                  if (dist < -projects.length / 2) dist += projects.length;
-                  const isActive = dist === 0;
-
-                  return (
-                    <div
-                      key={project.title}
-                      className="absolute inset-0 [backface-visibility:hidden]"
-                      style={{
-                        transform: `rotateY(${index * ANGLE_STEP}deg) translateZ(${RADIUS}px)`,
-                      }}>
-                      <ProjectCard project={project} isActive={isActive} />
-                    </div>
-                  );
-                })}
-              </motion.div>
-            </div>
-          ) : (
-            <div className="relative w-full max-w-[640px] mx-auto">
-              <ProjectCard project={projects[activeIndex]} isActive={true} />
-            </div>
-          )}
+              return (
+                <div
+                  key={project.id}
+                  className="absolute w-[92vw] max-w-[340px] sm:max-w-[400px] md:max-w-[420px] h-full transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] [transform-style:preserve-3d] will-change-transform [scroll-snap-align:center]"
+                  style={{
+                    transform: cardStyle.transform,
+                    opacity: cardStyle.opacity,
+                    zIndex: cardStyle.zIndex,
+                    filter: cardStyle.filter,
+                    pointerEvents: cardStyle.pointerEvents,
+                  }}>
+                  <ProjectCard
+                    project={project}
+                    isActive={isActive}
+                    onSelect={() => {
+                      goToProject(index);
+                      restartAutoplayTimer();
+                    }}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
-
-        <CarouselControls
-          activeIndex={activeIndex}
-          onPrev={prev}
-          onNext={next}
-          onGoTo={goToProject}
-          count={projects.length}
-        />
       </div>
     </section>
   );
