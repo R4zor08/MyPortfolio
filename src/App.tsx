@@ -7,6 +7,7 @@ import { Skills } from './components/Skills';
 import { Services } from './components/Services';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
+import { RazorAIChat } from './components/RazorAIChat';
 
 export function App() {
   return (
@@ -26,6 +27,7 @@ export function App() {
         <Contact />
       </main>
       <Footer />
+      <RazorAIChat />
     </div>
   );
 }
