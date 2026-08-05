@@ -218,10 +218,6 @@ export function Skills() {
             Technical <span className="text-gradient">Skills</span>
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent rounded-full mx-auto shadow-[0_0_12px_rgba(168,85,247,0.7)]"></div>
-          <p className="text-gray-400 mt-5 max-w-xl mx-auto text-sm md:text-base">
-            A toolkit I use to design, build, and ship modern web and mobile
-            applications.
-          </p>
         </motion.div>
 
         {/* Moving logo rows */}

@@ -6,7 +6,6 @@ import {
   PenTool,
   Network,
   Database,
-  Sparkles,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -156,20 +155,12 @@ export function Services() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="mb-10 sm:mb-12 text-center max-w-2xl mx-auto">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase bg-purple-500/10 text-purple-300 border border-purple-500/30 mb-5">
-            <Sparkles size={12} className="text-purple-400" />
-            My Services
-          </span>
           <h2
             className="font-heading font-bold text-white tracking-tight mb-4"
             style={{ fontSize: 'clamp(2rem, 5vw, 3rem)' }}>
             What I <span className="text-gradient">Do</span>
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent rounded-full mx-auto shadow-[0_0_12px_rgba(168,85,247,0.7)] mb-5" />
-          <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-            From concept to deployment — I deliver end-to-end digital solutions
-            tailored to your needs.
-          </p>
+          <div className="w-24 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent rounded-full mx-auto shadow-[0_0_12px_rgba(168,85,247,0.7)]" />
         </motion.div>
 
         {/* Horizontal scroll track */}

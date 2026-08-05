@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUp, Code2, ArrowRight } from 'lucide-react';
+import { ArrowUp, ArrowRight } from 'lucide-react';
 import { SiGithub, SiFacebook, SiInstagram } from 'react-icons/si';
 import type { IconType } from 'react-icons';
 
@@ -18,8 +18,6 @@ const socialLinks: { label: string; href: string; icon: IconType }[] = [
   { label: 'Facebook', href: 'https://www.facebook.com/Ryeeeee505', icon: SiFacebook },
   { label: 'Instagram', href: 'https://www.instagram.com/r4zorrrz/', icon: SiInstagram },
 ];
-
-const techStack = ['React', 'Flutter', 'Node.js', 'Tailwind CSS', 'MongoDB'];
 
 export function BackToTop() {
   const [visible, setVisible] = useState(false);
@@ -42,7 +40,7 @@ export function BackToTop() {
           whileHover={{ y: -3 }}
           whileTap={{ scale: 0.95 }}
           aria-label="Back to top"
-          className="fixed bottom-6 right-6 z-50 w-11 h-11 rounded-full glass-card border border-purple-500/30 text-purple-300 hover:text-white hover:border-purple-500/60 hover:shadow-[0_0_24px_rgba(139,92,246,0.4)] flex items-center justify-center transition-colors duration-300">
+          className="fixed bottom-6 left-6 z-50 w-11 h-11 rounded-full glass-card border border-purple-500/30 text-purple-300 hover:text-white hover:border-purple-500/60 hover:shadow-[0_0_24px_rgba(139,92,246,0.4)] flex items-center justify-center transition-colors duration-300">
           <ArrowUp size={18} />
         </motion.a>
       )}
@@ -76,25 +74,18 @@ export function Footer() {
               <a
                 href="#home"
                 className="inline-flex items-center gap-2.5 text-2xl font-heading font-bold text-white tracking-tight mb-3 group">
-                <span className="w-9 h-9 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-400 group-hover:bg-purple-500/25 group-hover:border-purple-500/50 transition-all duration-300">
-                  <Code2 size={18} />
+                <span className="w-10 h-10 rounded-full overflow-hidden border border-purple-500/30 bg-purple-500/10 flex items-center justify-center group-hover:bg-purple-500/20 group-hover:border-purple-500/50 transition-all duration-300 shadow-[0_0_20px_rgba(139,92,246,0.2)]">
+                  <img
+                    src="/razor.png"
+                    alt="Razor logo"
+                    className="w-7 h-7 object-contain"
+                  />
                 </span>
-                Ryan<span className="text-gradient">.dev</span>
+                Razor
               </a>
-              <p className="text-gray-500 text-sm leading-relaxed max-w-xs mb-4">
+              <p className="text-gray-500 text-sm leading-relaxed max-w-xs mb-5">
                 Web & App Developer building modern digital solutions from the Philippines.
               </p>
-
-              {/* Tech stack pills */}
-              <div className="flex flex-wrap justify-center sm:justify-start gap-1.5 mb-5">
-                {techStack.map((tech) => (
-                  <span
-                    key={tech}
-                    className="text-[10px] px-2.5 py-1 rounded-full bg-white/[0.03] text-gray-600 border border-white/6 font-medium">
-                    {tech}
-                  </span>
-                ))}
-              </div>
 
               <div className="flex gap-2.5">
                 {socialLinks.map(({ label, href, icon: Icon }) => (

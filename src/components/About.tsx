@@ -6,8 +6,8 @@ import {
   Lightbulb,
   GraduationCap,
   MapPin,
-  Sparkles,
 } from 'lucide-react';
+import { PixelVanishAvatar } from './PixelVanishAvatar';
 
 const highlights = [
   {
@@ -61,7 +61,7 @@ const itemVariants = {
 
 export function About() {
   return (
-    <section id="about" className="section-padding relative overflow-hidden bg-[#080812]">
+    <section id="about" className="section-padding relative overflow-visible bg-[#080812]">
       {/* Ambient background */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 -left-32 w-80 h-80 bg-purple-600/15 rounded-full blur-[120px]" />
@@ -85,20 +85,12 @@ export function About() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
           className="mb-12 sm:mb-16 text-center max-w-2xl mx-auto">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase bg-purple-500/10 text-purple-300 border border-purple-500/30 mb-5">
-            <Sparkles size={12} className="text-purple-400" />
-            Who I Am
-          </span>
           <h2
             className="font-heading font-bold text-white tracking-tight mb-4"
             style={{ fontSize: 'clamp(2rem, 5vw, 3rem)' }}>
             About <span className="text-gradient">Me</span>
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent rounded-full mx-auto shadow-[0_0_12px_rgba(168,85,247,0.7)] mb-5" />
-          <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
-            A developer passionate about building digital experiences that are
-            functional, beautiful, and meaningful.
-          </p>
+          <div className="w-24 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent rounded-full mx-auto shadow-[0_0_12px_rgba(168,85,247,0.7)]" />
         </motion.div>
 
         <div className="grid lg:grid-cols-12 gap-6 lg:gap-8 items-start">
@@ -109,26 +101,22 @@ export function About() {
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
             className="lg:col-span-4">
-            <div className="glass-card rounded-3xl p-6 sm:p-8 relative overflow-hidden group h-full">
+            <div className="glass-card rounded-3xl p-6 sm:p-8 relative overflow-visible group h-full">
               <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 via-transparent to-violet-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <div className="absolute -top-20 -right-20 w-48 h-48 bg-purple-600/15 rounded-full blur-3xl" />
 
               <div className="relative z-10 flex flex-col items-center text-center">
-                {/* Avatar with glowing ring */}
-                <div className="relative mb-6">
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-500 via-violet-500 to-fuchsia-500 blur-md opacity-60 scale-110" />
-                  <div className="relative w-36 h-36 sm:w-40 sm:h-40 rounded-full p-[3px] bg-gradient-to-br from-purple-400 via-violet-500 to-purple-600 shadow-[0_0_40px_rgba(139,92,246,0.4)]">
-                    <div className="w-full h-full rounded-full overflow-hidden bg-[#0a0518] border-2 border-[#080812]">
-                      <img
-                        src="/cb1b18c738d44dcfbf8c8ec0b89cfff1.png"
-                        alt="Developer illustration"
-                        className="w-full h-full object-cover object-top scale-110"
-                        loading="lazy"
+                {/* Avatar with glowing ring + pixel vanish */}
+                <div className="relative mb-6 overflow-visible z-20">
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-500 via-violet-500 to-fuchsia-500 blur-md opacity-60 scale-110 pointer-events-none" />
+                  <div className="relative w-36 h-36 sm:w-40 sm:h-40 rounded-full p-[3px] bg-gradient-to-br from-purple-400 via-violet-500 to-purple-600 shadow-[0_0_40px_rgba(139,92,246,0.4)] overflow-visible">
+                    <div className="relative w-full h-full rounded-full bg-[#0a0518] border-2 border-[#080812] overflow-visible">
+                      <PixelVanishAvatar
+                        baseSrc="/cb1b18c738d44dcfbf8c8ec0b89cfff1.png"
+                        coverSrc="/spiderman.png?v=3"
+                        alt="Profile photo covered by Spider-Man — hover or tap to reveal"
                       />
                     </div>
-                  </div>
-                  <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center border-2 border-[#080812] shadow-lg">
-                    <Code size={14} className="text-white" />
                   </div>
                 </div>
 

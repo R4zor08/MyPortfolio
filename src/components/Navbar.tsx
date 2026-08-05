@@ -58,7 +58,7 @@ export function Navbar() {
             href="#home"
             onClick={closeMenu}
             className="flex items-center gap-2.5 shrink-0 group"
-            aria-label="Ryan.dev — Home">
+            aria-label="Razor — Home">
             <span className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-white/10 bg-white/[0.04] flex items-center justify-center group-hover:border-purple-500/40 transition-colors duration-300 shadow-[0_0_20px_rgba(139,92,246,0.15)]">
               <img
                 src="/razor.png"
@@ -67,7 +67,7 @@ export function Navbar() {
               />
             </span>
             <span className="font-heading font-bold text-base sm:text-lg text-white tracking-tight">
-              Ryan<span className="text-gradient">.dev</span>
+              Razor
             </span>
           </a>
 
