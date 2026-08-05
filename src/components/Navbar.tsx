@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 
@@ -18,99 +18,148 @@ export function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 40);
       const sections = navLinks.map((link) => link.href.substring(1));
       const current = sections.find((section) => {
         const element = document.getElementById(section);
         if (element) {
           const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
+          return rect.top <= 120 && rect.bottom >= 120;
         }
         return false;
       });
       if (current) setActiveSection(current);
     };
-    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';
     };
   }, [isMobileMenuOpen]);
 
+  const closeMenu = () => setIsMobileMenuOpen(false);
+
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-[#050505]/80 backdrop-blur-md border-b border-purple-500/20 py-4' : 'bg-transparent py-6'}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 flex items-center justify-between">
-        <a
-          href="#home"
-          className="text-2xl font-heading font-bold text-white tracking-tight flex items-center gap-2">
-          <img
-            src="/razor.png"
-            alt="R4zor08 logo"
-            className="w-10 h-10 sm:w-12 sm:h-14 object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.6)]"
-          />
-          <span className="hidden sm:inline">R4zor08</span>
-        </a>
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        isScrolled
+          ? 'bg-[#050505]/75 backdrop-blur-xl border-b border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.4)]'
+          : 'bg-transparent'
+      }`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10">
+        <div className="flex items-center justify-between h-16 sm:h-[4.25rem]">
+          {/* Brand */}
+          <a
+            href="#home"
+            onClick={closeMenu}
+            className="flex items-center gap-2.5 shrink-0 group"
+            aria-label="Ryan.dev — Home">
+            <span className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-white/10 bg-white/[0.04] flex items-center justify-center group-hover:border-purple-500/40 transition-colors duration-300 shadow-[0_0_20px_rgba(139,92,246,0.15)]">
+              <img
+                src="/razor.png"
+                alt=""
+                className="w-6 h-6 sm:w-7 sm:h-7 object-contain"
+              />
+            </span>
+            <span className="font-heading font-bold text-base sm:text-lg text-white tracking-tight">
+              Ryan<span className="text-gradient">.dev</span>
+            </span>
+          </a>
 
-        <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">
-          <ul className="flex items-center gap-6">
-            {navLinks.map((link) => (
-              <li key={link.name}>
-                <a
-                  href={link.href}
-                  className={`text-sm font-medium transition-colors hover:text-purple-400 ${activeSection === link.href.substring(1) ? 'text-purple-400' : 'text-gray-300'}`}>
-                  {link.name}
-                </a>
-              </li>
-            ))}
-          </ul>
+          {/* Desktop links — centered */}
+          <nav
+            className="hidden lg:flex absolute left-1/2 -translate-x-1/2"
+            aria-label="Main navigation">
+            <ul className="flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-md px-1.5 py-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+              {navLinks.map((link) => {
+                const isActive = activeSection === link.href.substring(1);
+                return (
+                  <li key={link.name}>
+                    <a
+                      href={link.href}
+                      className={`relative px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                        isActive
+                          ? 'text-white bg-white/[0.1] shadow-[0_0_20px_rgba(139,92,246,0.15)]'
+                          : 'text-gray-400 hover:text-white hover:bg-white/[0.05]'
+                      }`}>
+                      {link.name}
+                      {isActive && (
+                        <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-purple-400" />
+                      )}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+
+          {/* Desktop CTA */}
           <a
             href="#contact"
-            className="px-5 py-2.5 rounded-full text-sm font-medium text-white bg-gradient-glow">
-            Contact Me
+            className="hidden lg:inline-flex items-center px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-gradient-glow hover:-translate-y-0.5 transition-transform duration-300 shrink-0">
+            Hire Me
           </a>
-        </nav>
 
-        <button
-          type="button"
-          className="md:hidden text-gray-300 hover:text-white p-1"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={isMobileMenuOpen}>
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+          {/* Mobile menu toggle */}
+          <button
+            type="button"
+            className="lg:hidden w-10 h-10 rounded-full border border-white/10 bg-white/[0.04] flex items-center justify-center text-gray-300 hover:text-white hover:border-purple-500/40 transition-all duration-300"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isMobileMenuOpen}>
+            {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
+        </div>
       </div>
 
+      {/* Mobile dropdown */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="absolute top-full left-0 right-0 bg-[#080812]/95 backdrop-blur-xl border-b border-purple-500/20 py-4 px-6 md:hidden flex flex-col gap-4 shadow-2xl max-h-[calc(100vh-80px)] overflow-y-auto">
-            {navLinks.map((link) => (
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.28, ease: [0.25, 1, 0.5, 1] }}
+            className="lg:hidden overflow-hidden border-t border-white/5 bg-[#080812]/95 backdrop-blur-xl">
+            <nav aria-label="Mobile navigation" className="px-4 sm:px-6 py-4">
+              <ul className="flex flex-col gap-1">
+                {navLinks.map((link, i) => {
+                  const isActive = activeSection === link.href.substring(1);
+                  return (
+                    <motion.li
+                      key={link.name}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.04 }}>
+                      <a
+                        href={link.href}
+                        onClick={closeMenu}
+                        className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                          isActive
+                            ? 'text-white bg-purple-500/15 border border-purple-500/25'
+                            : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
+                        }`}>
+                        {link.name}
+                        {isActive && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+                        )}
+                      </a>
+                    </motion.li>
+                  );
+                })}
+              </ul>
               <a
-                key={link.name}
-                href={link.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`text-lg font-medium py-2 border-b border-white/5 ${activeSection === link.href.substring(1) ? 'text-purple-400' : 'text-gray-300'}`}>
-                {link.name}
+                href="#contact"
+                onClick={closeMenu}
+                className="mt-4 block w-full text-center px-5 py-3 rounded-full text-sm font-semibold text-white bg-gradient-glow">
+                Hire Me
               </a>
-            ))}
-            <a
-              href="#contact"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="mt-4 px-6 py-3 text-center rounded-full text-base font-medium text-white bg-gradient-glow">
-              Contact Me
-            </a>
+            </nav>
           </motion.div>
         )}
       </AnimatePresence>

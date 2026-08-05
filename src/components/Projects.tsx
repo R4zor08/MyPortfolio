@@ -24,7 +24,8 @@ const projects: Project[] = [
     description:
       'A Student Concern Management System designed to simplify the submission, tracking, and management of student concerns through a centralized digital platform.',
     category: 'WEB APP / STUDENT SYSTEM',
-    image: '/1.png',
+    image: '/citezen-screenshot.png',
+    logo: '/citezen-logo.png',
     technologies: ['React.js', 'Tailwind CSS', 'Node.js', 'Express', 'MySQL'],
     github: 'https://github.com/R4zor08/CITEzen',
     link: 'https://citezen-demo.vercel.app',
@@ -48,7 +49,8 @@ const projects: Project[] = [
     description:
       'An IoT-based Fire Alarm Monitoring System that provides real-time alerts and monitoring to improve safety and emergency response.',
     category: 'IOT / FIRE SAFETY',
-    image: '/3.png',
+    image: '/fireguard3-screenshot.png',
+    logo: '/fireguard3-logo.png',
     technologies: ['Flutter', 'Dart', 'IoT Sensors', 'Node.js', 'MongoDB'],
     github: 'https://github.com/R4zor08/FIREGUARD3',
     link: 'https://fireguard3.vercel.app',
@@ -60,7 +62,8 @@ const projects: Project[] = [
     description:
       'A Car Rental Management System that streamlines vehicle reservations and fleet management through a modern web application.',
     category: 'WEB APP / CAR RENTAL',
-    image: '/1.png',
+    image: '/wheelgo-screenshot.png',
+    logo: '/wheelgo-logo.png',
     technologies: ['React.js', 'Tailwind CSS', 'Node.js', 'SQLite', 'REST API'],
     github: 'https://github.com/R4zor08/WheelGo',
     link: 'https://wheelgo.vercel.app',
@@ -131,12 +134,14 @@ function ProjectCard({
       <div className="relative z-20 p-5 sm:p-6 flex items-center justify-between mb-auto">
         <div className="flex items-center gap-2.5">
           {project.logo ? (
-            <img
-              src={project.logo}
-              alt=""
-              className="w-8 h-8 sm:w-10 sm:h-10 object-contain drop-shadow-[0_0_12px_rgba(139,92,246,0.6)]"
-              loading="lazy"
-            />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-white/20 bg-black/60 shadow-md backdrop-blur-md shrink-0 flex items-center justify-center">
+              <img
+                src={project.logo}
+                alt=""
+                className="w-full h-full object-contain object-center"
+                loading="lazy"
+              />
+            </div>
           ) : (
             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-black/40 border border-purple-500/40 flex items-center justify-center text-purple-300 font-heading font-bold text-xs sm:text-sm shadow-md backdrop-blur-md">
               {getInitials(project.title)}
