@@ -92,7 +92,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
             {num}
           </span>
           <div
-            className={`w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center border border-purple-500/20 group-hover:bg-purple-500/20 group-hover:text-purple-300 group-hover:border-purple-500/40 transition-all duration-300 ${service.iconGlow}`}>
+            className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center border border-purple-500/20 group-hover:bg-purple-500/20 group-hover:text-purple-300 group-hover:border-purple-500/40 transition-all duration-300 ${service.iconGlow}`}>
             <Icon size={26} strokeWidth={1.75} />
           </div>
         </div>
@@ -161,6 +161,9 @@ export function Services() {
             What I <span className="text-gradient">Do</span>
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent rounded-full mx-auto shadow-[0_0_12px_rgba(168,85,247,0.7)]" />
+          <p className="mt-4 text-xs text-gray-500 md:hidden tracking-wide">
+            Swipe to explore →
+          </p>
         </motion.div>
 
         {/* Horizontal scroll track */}

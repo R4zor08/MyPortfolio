@@ -146,7 +146,7 @@ export function Contact() {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={label}
-                        className="w-10 h-10 rounded-xl glass-card border border-white/10 text-gray-400 hover:text-white hover:border-purple-500/50 hover:shadow-[0_0_20px_rgba(139,92,246,0.25)] flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5">
+                        className="w-11 h-11 rounded-xl glass-card border border-white/10 text-gray-400 hover:text-white hover:border-purple-500/50 hover:shadow-[0_0_20px_rgba(139,92,246,0.25)] flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5">
                         <Icon size={17} />
                       </a>
                     ))}
@@ -161,7 +161,7 @@ export function Contact() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400" />
               </span>
-              <p className="text-sm text-gray-300">
+              <p className="text-xs sm:text-sm text-gray-300 leading-snug">
                 <span className="text-emerald-400 font-medium">Available</span> for freelance & collaborations
               </p>
             </div>

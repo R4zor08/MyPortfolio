@@ -40,7 +40,7 @@ export function BackToTop() {
           whileHover={{ y: -3 }}
           whileTap={{ scale: 0.95 }}
           aria-label="Back to top"
-          className="fixed bottom-6 left-6 z-50 w-11 h-11 rounded-full glass-card border border-purple-500/30 text-purple-300 hover:text-white hover:border-purple-500/60 hover:shadow-[0_0_24px_rgba(139,92,246,0.4)] flex items-center justify-center transition-colors duration-300">
+          className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] left-4 sm:left-6 z-50 w-12 h-12 rounded-full glass-card border border-purple-500/30 text-purple-300 hover:text-white hover:border-purple-500/60 hover:shadow-[0_0_24px_rgba(139,92,246,0.4)] flex items-center justify-center transition-colors duration-300">
           <ArrowUp size={18} />
         </motion.a>
       )}
@@ -95,7 +95,7 @@ export function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={label}
-                    className="w-9 h-9 rounded-xl glass-card border border-white/10 text-gray-500 hover:text-white hover:border-purple-500/50 hover:shadow-[0_0_16px_rgba(139,92,246,0.25)] flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5">
+                    className="w-11 h-11 rounded-xl glass-card border border-white/10 text-gray-500 hover:text-white hover:border-purple-500/50 hover:shadow-[0_0_16px_rgba(139,92,246,0.25)] flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5">
                     <Icon size={16} />
                   </a>
                 ))}

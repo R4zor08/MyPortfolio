@@ -131,8 +131,8 @@ function ProjectCard({
       </div>
 
       {/* Top Header inside Card */}
-      <div className="relative z-20 p-5 sm:p-6 flex items-center justify-between mb-auto">
-        <div className="flex items-center gap-2.5">
+      <div className="relative z-20 p-5 sm:p-6 flex items-center justify-between gap-2 mb-auto">
+        <div className="flex items-center gap-2.5 min-w-0">
           {project.logo ? (
             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-white/20 bg-black/60 shadow-md backdrop-blur-md shrink-0 flex items-center justify-center">
               <img
@@ -143,16 +143,16 @@ function ProjectCard({
               />
             </div>
           ) : (
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-black/40 border border-purple-500/40 flex items-center justify-center text-purple-300 font-heading font-bold text-xs sm:text-sm shadow-md backdrop-blur-md">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-black/40 border border-purple-500/40 flex items-center justify-center text-purple-300 font-heading font-bold text-xs sm:text-sm shadow-md backdrop-blur-md shrink-0">
               {getInitials(project.title)}
             </div>
           )}
-          <span className="text-[10px] sm:text-xs font-bold tracking-widest uppercase bg-purple-500/20 text-purple-300 border border-purple-500/40 px-3 py-1 rounded-full backdrop-blur-md">
+          <span className="text-[10px] sm:text-xs font-bold tracking-widest uppercase bg-purple-500/20 text-purple-300 border border-purple-500/40 px-2.5 sm:px-3 py-1 rounded-full backdrop-blur-md truncate">
             {project.category}
           </span>
         </div>
 
-        <span className="text-[10px] sm:text-xs font-mono font-bold text-gray-300 bg-black/50 border border-white/10 px-2.5 py-1 rounded-full backdrop-blur-md">
+        <span className="shrink-0 text-[10px] sm:text-xs font-mono font-bold text-gray-300 bg-black/50 border border-white/10 px-2.5 py-1 rounded-full backdrop-blur-md max-w-[40%] truncate">
           {project.subtitle}
         </span>
       </div>
@@ -189,7 +189,7 @@ function ProjectCard({
               rel="noopener noreferrer"
               tabIndex={isActive ? 0 : -1}
               onClick={(e) => e.stopPropagation()}
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold text-white bg-gradient-glow hover:-translate-y-0.5 transition-all shadow-[0_0_20px_rgba(139,92,246,0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500">
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 min-h-[44px] px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold text-white bg-gradient-glow hover:-translate-y-0.5 transition-all shadow-[0_0_20px_rgba(139,92,246,0.4)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500">
               Live Demo <ExternalLink size={14} />
             </a>
           )}
@@ -201,7 +201,7 @@ function ProjectCard({
               rel="noopener noreferrer"
               tabIndex={isActive ? 0 : -1}
               onClick={(e) => e.stopPropagation()}
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold text-gray-200 bg-black/50 backdrop-blur-md border border-white/20 hover:border-purple-500/60 hover:text-white hover:-translate-y-0.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 min-h-[44px] px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold text-gray-200 bg-black/50 backdrop-blur-md border border-white/20 hover:border-purple-500/60 hover:text-white hover:-translate-y-0.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500"
               aria-label={`View ${project.title} source code on GitHub`}>
               <Github size={15} />
               GitHub
@@ -216,8 +216,6 @@ function ProjectCard({
 export function Projects() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const isDesktop = useMediaQuery('(min-width: 1024px)');
-  const isTablet = useMediaQuery('(min-width: 768px) and (max-width: 1023px)');
   const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
 
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -393,61 +391,12 @@ export function Projects() {
 
   const activeIndex = ((currentIndex % projectCount) + projectCount) % projectCount;
 
-  // Compute 3D Cover Flow properties for Voyager2 card layout
+  // 3D Cover Flow (mobile + desktop share the same transforms)
   const getCardStyle = (index: number) => {
     let dist = index - activeIndex;
     if (dist > projectCount / 2) dist -= projectCount;
     if (dist < -projectCount / 2) dist += projectCount;
 
-    if (!isDesktop && !isTablet) {
-      // Mobile horizontal sliding
-      return {
-        transform: `translateX(${dist * 105}%) scale(${dist === 0 ? 1 : 0.88})`,
-        opacity: dist === 0 ? 1 : dist === -1 || dist === 1 ? 0.35 : 0,
-        zIndex: dist === 0 ? 30 : 10,
-        filter: dist === 0 ? 'brightness(1) blur(0px)' : 'brightness(0.6) blur(2px)',
-        pointerEvents: (dist === 0 ? 'auto' : 'none') as React.CSSProperties['pointerEvents'],
-      };
-    }
-
-    if (isTablet) {
-      // Tablet perspective
-      if (dist === 0) {
-        return {
-          transform: 'translateX(0%) scale(1) rotateY(0deg)',
-          opacity: 1,
-          zIndex: 30,
-          filter: 'brightness(1) blur(0px)',
-          pointerEvents: 'auto' as React.CSSProperties['pointerEvents'],
-        };
-      } else if (dist === -1) {
-        return {
-          transform: 'translateX(-65%) scale(0.82) rotateY(25deg)',
-          opacity: 0.55,
-          zIndex: 20,
-          filter: 'brightness(0.65) blur(1px)',
-          pointerEvents: 'auto' as React.CSSProperties['pointerEvents'],
-        };
-      } else if (dist === 1) {
-        return {
-          transform: 'translateX(65%) scale(0.82) rotateY(-25deg)',
-          opacity: 0.55,
-          zIndex: 20,
-          filter: 'brightness(0.65) blur(1px)',
-          pointerEvents: 'auto' as React.CSSProperties['pointerEvents'],
-        };
-      } else {
-        return {
-          transform: `translateX(${dist > 0 ? 115 : -115}%) scale(0.65) rotateY(${dist > 0 ? -40 : 40}deg)`,
-          opacity: 0,
-          zIndex: 5,
-          filter: 'brightness(0.4) blur(4px)',
-          pointerEvents: 'none' as React.CSSProperties['pointerEvents'],
-        };
-      }
-    }
-
-    // Desktop 3D Cover Flow (Voyager2 Style)
     if (dist === 0) {
       return {
         transform: 'translateX(0%) scale(1) rotateY(0deg)',
@@ -547,7 +496,7 @@ export function Projects() {
               return (
                 <div
                   key={project.id}
-                  className="absolute w-[92vw] max-w-[340px] sm:max-w-[400px] md:max-w-[420px] h-full transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] [transform-style:preserve-3d] will-change-transform [scroll-snap-align:center]"
+                  className="absolute w-[min(88vw,340px)] sm:w-full sm:max-w-[400px] md:max-w-[420px] h-full transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] [transform-style:preserve-3d] will-change-transform"
                   style={{
                     transform: cardStyle.transform,
                     opacity: cardStyle.opacity,

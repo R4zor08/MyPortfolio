@@ -108,7 +108,7 @@ export function Navbar() {
           {/* Mobile menu toggle */}
           <button
             type="button"
-            className="lg:hidden w-10 h-10 rounded-full border border-white/10 bg-white/[0.04] flex items-center justify-center text-gray-300 hover:text-white hover:border-purple-500/40 transition-all duration-300"
+            className="lg:hidden w-11 h-11 min-w-[44px] min-h-[44px] rounded-full border border-white/10 bg-white/[0.04] flex items-center justify-center text-gray-300 hover:text-white hover:border-purple-500/40 transition-all duration-300"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isMobileMenuOpen}>

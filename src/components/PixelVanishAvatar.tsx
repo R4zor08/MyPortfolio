@@ -85,13 +85,16 @@ export function PixelVanishAvatar({
         const rr = seededOffset(i, 3);
         // Strong scatter so blocks fly clearly outside the circle
         const angle = (i / (GRID * GRID)) * Math.PI * 2 + rx * 1.2;
-        const dist = 60 + ry * 120;
+        // Smaller scatter on narrow screens so blocks don't blow the layout
+        const isNarrow =
+          typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
+        const dist = isNarrow ? 28 + ry * 48 : 60 + ry * 120;
         return {
           i,
           row,
           col,
-          x: Math.cos(angle) * dist + (rx - 0.5) * 40,
-          y: Math.sin(angle) * dist + ry * 50,
+          x: Math.cos(angle) * dist + (rx - 0.5) * (isNarrow ? 16 : 40),
+          y: Math.sin(angle) * dist + ry * (isNarrow ? 24 : 50),
           rotate: (rr - 0.5) * 140,
           delay: seededOffset(i, 4) * 0.28,
         };

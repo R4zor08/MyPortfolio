@@ -61,7 +61,7 @@ const itemVariants = {
 
 export function About() {
   return (
-    <section id="about" className="section-padding relative overflow-visible bg-[#080812]">
+    <section id="about" className="section-padding relative overflow-x-clip overflow-y-visible bg-[#080812]">
       {/* Ambient background */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 -left-32 w-80 h-80 bg-purple-600/15 rounded-full blur-[120px]" />
@@ -140,15 +140,15 @@ export function About() {
                 </div>
 
                 {/* Stats row */}
-                <div className="w-full grid grid-cols-3 gap-2 sm:gap-3">
+                <div className="w-full grid grid-cols-3 gap-1.5 sm:gap-3">
                   {stats.map((stat) => (
                     <div
                       key={stat.label}
-                      className="glass-card rounded-2xl px-2 py-3 sm:px-3 sm:py-4 border-white/5 text-center">
-                      <div className="font-heading font-bold text-lg sm:text-xl text-gradient">
+                      className="glass-card rounded-2xl px-1.5 py-3 sm:px-3 sm:py-4 border-white/5 text-center">
+                      <div className="font-heading font-bold text-base sm:text-xl text-gradient">
                         {stat.value}
                       </div>
-                      <div className="text-[10px] sm:text-xs text-gray-500 mt-0.5 leading-tight">
+                      <div className="text-[9px] sm:text-xs text-gray-500 mt-0.5 leading-tight px-0.5">
                         {stat.label}
                       </div>
                     </div>

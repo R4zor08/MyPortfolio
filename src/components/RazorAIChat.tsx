@@ -96,7 +96,7 @@ export function RazorAIChat() {
   const send = () => sendText(input);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+    <div className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-4 sm:right-6 z-50 flex flex-col items-end gap-3">
       <AnimatePresence>
         {open && (
           <motion.div
@@ -104,14 +104,14 @@ export function RazorAIChat() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.94 }}
             transition={{ duration: 0.28, ease: [0.25, 1, 0.5, 1] }}
-            className="w-[min(calc(100vw-2rem),390px)] h-[min(72vh,560px)] rounded-[1.75rem] overflow-hidden flex flex-col border border-white/10 shadow-[0_24px_80px_rgba(0,0,0,0.65)] bg-[#0e0a18]">
+            className="w-[min(calc(100vw-2rem),390px)] h-[min(72dvh,560px)] max-h-[calc(100dvh-5.5rem-env(safe-area-inset-bottom))] rounded-[1.75rem] overflow-hidden flex flex-col border border-white/10 shadow-[0_24px_80px_rgba(0,0,0,0.65)] bg-[#0e0a18]">
             {/* Messenger-style header */}
             <div className="relative z-10 flex items-center gap-3 px-3.5 py-3 bg-[#15101f]/95 backdrop-blur-xl border-b border-white/8">
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="Close chat"
-                className="w-9 h-9 rounded-full text-gray-400 hover:text-white hover:bg-white/5 flex items-center justify-center transition-colors shrink-0 lg:hidden">
+                className="w-11 h-11 rounded-full text-gray-400 hover:text-white hover:bg-white/5 flex items-center justify-center transition-colors shrink-0 lg:hidden">
                 <X size={18} />
               </button>
 
@@ -230,7 +230,7 @@ export function RazorAIChat() {
                       key={label}
                       type="button"
                       onClick={() => sendText(label)}
-                      className="text-xs px-3 py-1.5 rounded-full border border-purple-500/35 text-purple-200 bg-purple-500/10 hover:bg-purple-500/20 hover:border-purple-400/50 transition-colors">
+                      className="text-xs px-3.5 py-2.5 min-h-[36px] rounded-full border border-purple-500/35 text-purple-200 bg-purple-500/10 hover:bg-purple-500/20 hover:border-purple-400/50 transition-colors">
                       {label}
                     </button>
                   ))}
