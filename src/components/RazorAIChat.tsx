@@ -40,6 +40,7 @@ export function RazorAIChat() {
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const idRef = useRef(1);
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     if (listRef.current) {
@@ -53,6 +54,10 @@ export function RazorAIChat() {
       return () => clearTimeout(t);
     }
   }, [open]);
+
+  useEffect(() => {
+    return () => abortRef.current?.abort();
+  }, []);
 
   const sendText = async (raw: string) => {
     const text = raw.trim();
@@ -73,13 +78,36 @@ export function RazorAIChat() {
     setInput('');
     setTyping(true);
 
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     let replyText: string;
     try {
-      replyText = await askGroq(toGroqHistory(historySnapshot), text);
-    } catch {
-      replyText =
-        "Sorry — something went wrong on my end. Try again in a moment, or reach me through the Contact section.";
+      replyText = await askGroq(
+        toGroqHistory(historySnapshot),
+        text,
+        controller.signal
+      );
+    } catch (err) {
+      if (controller.signal.aborted) return;
+      const detail = err instanceof Error ? err.message : '';
+      if (/not configured|Missing|VITE_GROQ|GROQ_API/i.test(detail)) {
+        replyText =
+          "Chat isn't configured yet. Add a Groq API key to .env (VITE_GROQ_API_KEY), restart the dev server, then try again — or message me via Contact.";
+      } else if (/model|not found|404/i.test(detail)) {
+        replyText =
+          "My AI model needs an update. Set VITE_GROQ_MODEL=openai/gpt-oss-20b in .env, restart, and try again.";
+      } else if (/rate|429|quota/i.test(detail)) {
+        replyText =
+          "I'm getting too many requests right now. Give me a minute, or reach me through the Contact section.";
+      } else {
+        replyText =
+          "Sorry — something went wrong on my end. Try again in a moment, or reach me through the Contact section.";
+      }
     }
+
+    if (controller.signal.aborted) return;
 
     setMessages((prev) => [
       ...prev,

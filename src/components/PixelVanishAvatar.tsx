@@ -1,8 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
-const GRID = 10;
-const RESTORE_MS = 1800;
+const GRID = 16;
+const BRUSH_RADIUS = 1.35;
+const BREAK_MS = 900;
+const RESTORE_MS = 650;
+/** Cover zoom / vertical offset for framing Spidey inside the circle */
+const COVER_SCALE = 1.1;
+const COVER_SHIFT_Y = 0;
+/** coverSrc is a transparent cutout, so each tile carries its own opaque
+ *  backdrop — it breaks away with the tile and exposes the photo beneath. */
+const COVER_BACKDROP = '#0a0518';
 
 type PixelVanishAvatarProps = {
   baseSrc: string;
@@ -11,21 +19,25 @@ type PixelVanishAvatarProps = {
   className?: string;
 };
 
-function seededOffset(i: number, salt: number) {
-  const n = Math.sin(i * 12.9898 + salt * 78.233) * 43758.5453;
-  return n - Math.floor(n);
-}
-
 export function PixelVanishAvatar({
   baseSrc,
   coverSrc,
   alt,
   className = '',
 }: PixelVanishAvatarProps) {
-  const [vanishing, setVanishing] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [cursor, setCursor] = useState<{ col: number; row: number } | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const restoreTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const isHovering = useRef(false);
+
+  const tiles = useMemo(
+    () =>
+      Array.from({ length: GRID * GRID }, (_, i) => ({
+        i,
+        row: Math.floor(i / GRID),
+        col: i % GRID,
+      })),
+    []
+  );
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -35,92 +47,50 @@ export function PixelVanishAvatar({
     return () => mq.removeEventListener('change', onChange);
   }, []);
 
-  useEffect(() => {
-    return () => {
-      if (restoreTimer.current) clearTimeout(restoreTimer.current);
+  const pointToCell = useCallback((clientX: number, clientY: number) => {
+    const el = rootRef.current;
+    if (!el) return null;
+    const rect = el.getBoundingClientRect();
+    const x = (clientX - rect.left) / rect.width;
+    const y = (clientY - rect.top) / rect.height;
+    const dx = x - 0.5;
+    const dy = y - 0.5;
+    if (dx * dx + dy * dy > 0.25) return null;
+
+    // Map circle coords onto the zoomed cover grid
+    const inv = 1 / COVER_SCALE;
+    const pad = (1 - inv) / 2;
+    const gx = pad + x * inv;
+    const gy = pad + COVER_SHIFT_Y + y * inv;
+    return {
+      col: Math.min(GRID - 1, Math.max(0, gx * GRID - 0.5)),
+      row: Math.min(GRID - 1, Math.max(0, gy * GRID - 0.5)),
     };
   }, []);
 
-  const clearRestore = () => {
-    if (restoreTimer.current) {
-      clearTimeout(restoreTimer.current);
-      restoreTimer.current = null;
-    }
+  const handlePointerMove = (e: React.PointerEvent) => {
+    setCursor(pointToCell(e.clientX, e.clientY));
   };
 
-  const startVanish = useCallback(() => setVanishing(true), []);
-  const restore = useCallback(() => setVanishing(false), []);
-
-  const handleMouseEnter = () => {
-    isHovering.current = true;
-    clearRestore();
-    startVanish();
-  };
-
-  const handleMouseLeave = () => {
-    isHovering.current = false;
-    clearRestore();
-    restore();
-  };
-
-  const handleClick = () => {
-    clearRestore();
-    if (vanishing && !isHovering.current) {
-      restore();
-      return;
-    }
-    startVanish();
-    restoreTimer.current = setTimeout(() => {
-      if (!isHovering.current) restore();
-    }, RESTORE_MS);
-  };
-
-  const tiles = useMemo(
-    () =>
-      Array.from({ length: GRID * GRID }, (_, i) => {
-        const row = Math.floor(i / GRID);
-        const col = i % GRID;
-        const rx = seededOffset(i, 1);
-        const ry = seededOffset(i, 2);
-        const rr = seededOffset(i, 3);
-        // Strong scatter so blocks fly clearly outside the circle
-        const angle = (i / (GRID * GRID)) * Math.PI * 2 + rx * 1.2;
-        // Smaller scatter on narrow screens so blocks don't blow the layout
-        const isNarrow =
-          typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches;
-        const dist = isNarrow ? 28 + ry * 48 : 60 + ry * 120;
-        return {
-          i,
-          row,
-          col,
-          x: Math.cos(angle) * dist + (rx - 0.5) * (isNarrow ? 16 : 40),
-          y: Math.sin(angle) * dist + ry * (isNarrow ? 24 : 50),
-          rotate: (rr - 0.5) * 140,
-          delay: seededOffset(i, 4) * 0.28,
-        };
-      }),
-    []
-  );
+  const handlePointerLeave = () => setCursor(null);
 
   return (
     <div
+      ref={rootRef}
       role="img"
       aria-label={alt}
       tabIndex={0}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onClick={handleClick}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          handleClick();
-        }
-      }}
-      className={`relative w-full h-full cursor-pointer select-none touch-manipulation overflow-visible ${className}`}>
+      onPointerMove={handlePointerMove}
+      onPointerEnter={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      onPointerDown={handlePointerMove}
+      className={`relative w-full h-full cursor-crosshair select-none touch-manipulation overflow-hidden rounded-full ${className}`}
+      style={{ clipPath: 'circle(50%)' }}>
       <span className="sr-only">{alt}</span>
 
-      {/* Layer 1 — real profile, always clipped to circle */}
-      <div className="absolute inset-0 rounded-full overflow-hidden z-0 pointer-events-none">
+      <div
+        className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-full"
+        style={{ clipPath: 'circle(50%)' }}>
         <img
           src={baseSrc}
           alt=""
@@ -130,68 +100,59 @@ export function PixelVanishAvatar({
         />
       </div>
 
-      {/* Layer 2 — Spidey cover. Clipped at rest; unclipped when vanishing so blocks fly out */}
       <div
-        className={`absolute inset-0 z-10 ${
-          vanishing ? 'overflow-visible' : 'overflow-hidden rounded-full'
-        }`}
+        className="absolute inset-0 z-10 overflow-hidden rounded-full"
+        style={{ clipPath: 'circle(50%)' }}
         aria-hidden="true">
-        <motion.div
-          className="absolute inset-0 rounded-full bg-black"
-          initial={false}
-          animate={{ opacity: vanishing ? 0 : 1 }}
-          transition={{ duration: vanishing ? 0.2 : 0.25 }}
-        />
-
+        {/* Zoomed cover grid — fills circle like object-cover */}
         <div
-          className="absolute left-1/2 top-1/2"
+          className="absolute left-1/2 top-1/2 overflow-hidden"
           style={{
             display: 'grid',
             gridTemplateColumns: `repeat(${GRID}, 1fr)`,
             gridTemplateRows: `repeat(${GRID}, 1fr)`,
-            // Zoom so full Spidey bust (head + chest) fills the circle
-            width: '158%',
-            height: '158%',
-            transform: 'translate(-50%, -50%)',
+            width: `${COVER_SCALE * 100}%`,
+            height: `${COVER_SCALE * 100}%`,
+            transform: `translate(-50%, calc(-50% - ${COVER_SHIFT_Y * 100}%))`,
           }}>
-          {tiles.map(({ i, row, col, x, y, rotate, delay }) => (
-            <motion.div
-              key={i}
-              className="relative"
-              style={{
-                backgroundImage: `url(${coverSrc})`,
-                backgroundSize: `${GRID * 100}% ${GRID * 100}%`,
-                backgroundPosition: `${(col / (GRID - 1)) * 100}% ${(row / (GRID - 1)) * 100}%`,
-                backgroundRepeat: 'no-repeat',
-                willChange: vanishing ? 'transform, opacity' : 'auto',
-              }}
-              initial={false}
-              animate={
-                vanishing
-                  ? reducedMotion
-                    ? { opacity: 0 }
+          {tiles.map(({ i, row, col }) => {
+            const dist = cursor
+              ? Math.hypot(col - cursor.col, row - cursor.row)
+              : Infinity;
+            const broken = dist <= BRUSH_RADIUS;
+            const falloff = broken ? 1 - dist / BRUSH_RADIUS : 0;
+
+            return (
+              <motion.div
+                key={i}
+                className="relative"
+                style={{
+                  backgroundColor: COVER_BACKDROP,
+                  backgroundImage: `url(${coverSrc})`,
+                  backgroundSize: `${GRID * 100}% ${GRID * 100}%`,
+                  backgroundPosition: `${(col / (GRID - 1)) * 100}% ${(row / (GRID - 1)) * 100}%`,
+                  backgroundRepeat: 'no-repeat',
+                }}
+                initial={false}
+                animate={
+                  reducedMotion
+                    ? { opacity: broken ? 0 : 1, scale: 1.02 }
                     : {
-                        x,
-                        y,
-                        rotate,
-                        opacity: 0,
-                        scale: 0.4,
+                        opacity: broken ? 0 : 1,
+                        scale: broken ? 0.55 + (1 - falloff) * 0.25 : 1.02,
                       }
-                  : {
-                      x: 0,
-                      y: 0,
-                      rotate: 0,
-                      opacity: 1,
-                      scale: 1,
-                    }
-              }
-              transition={{
-                duration: reducedMotion ? 0.25 : vanishing ? 0.65 : 0.4,
-                delay: reducedMotion ? 0 : vanishing ? delay : delay * 0.35,
-                ease: vanishing ? [0.16, 1, 0.3, 1] : [0.25, 1, 0.5, 1],
-              }}
-            />
-          ))}
+                }
+                transition={{
+                  duration: reducedMotion
+                    ? 0.12
+                    : broken
+                      ? BREAK_MS / 1000
+                      : RESTORE_MS / 1000,
+                  ease: broken ? [0.22, 1, 0.36, 1] : [0.25, 1, 0.5, 1],
+                }}
+              />
+            );
+          })}
         </div>
       </div>
     </div>

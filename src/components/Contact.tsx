@@ -143,18 +143,13 @@ export function Contact() {
               <div className="absolute bottom-0 left-0 w-32 h-32 bg-violet-600/10 rounded-full blur-2xl -ml-10 -mb-10" />
 
               <div className="relative z-10">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500/20 to-violet-600/10 border border-purple-500/30 flex items-center justify-center text-purple-300 font-heading font-bold text-xl shadow-[0_0_20px_rgba(139,92,246,0.2)]">
-                    RL
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-heading font-bold text-white">
-                      Ryan C. Llanto
-                    </h3>
-                    <p className="text-purple-400 text-sm font-medium">
-                      Web & App Developer
-                    </p>
-                  </div>
+                <div className="mb-6">
+                  <h3 className="text-xl font-heading font-bold text-white">
+                    Ryan C. Llanto
+                  </h3>
+                  <p className="text-purple-400 text-sm font-medium">
+                    Web & App Developer
+                  </p>
                 </div>
 
                 <div className="space-y-3">
@@ -204,16 +199,6 @@ export function Contact() {
               </div>
             </div>
 
-            <div className="glass-card rounded-2xl px-5 py-4 flex items-center gap-3 border border-emerald-500/20 bg-emerald-500/5">
-              <span className="relative flex h-2.5 w-2.5 shrink-0">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400" />
-              </span>
-              <p className="text-xs sm:text-sm text-gray-300 leading-snug">
-                <span className="text-emerald-400 font-medium">Available</span> for freelance &
-                collaborations
-              </p>
-            </div>
           </motion.div>
 
           <motion.div

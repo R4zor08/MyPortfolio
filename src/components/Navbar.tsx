@@ -6,7 +6,9 @@ const navLinks = [
   { name: 'Home', href: '#home' },
   { name: 'About', href: '#about' },
   { name: 'Skills', href: '#skills' },
+  { name: 'Experience', href: '#experience' },
   { name: 'Projects', href: '#projects' },
+  { name: 'Achievements', href: '#achievements' },
   { name: 'Services', href: '#services' },
   { name: 'Contact', href: '#contact' },
 ];
@@ -46,51 +48,37 @@ export function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled
-          ? 'bg-[#050505]/75 backdrop-blur-xl border-b border-white/5 shadow-[0_8px_32px_rgba(0,0,0,0.4)]'
-          : 'bg-transparent'
+      className={`fixed top-0 left-0 right-0 z-50 bg-[#050505]/95 backdrop-blur-xl transition-shadow duration-300 ${
+        isScrolled ? 'shadow-[0_8px_30px_rgba(0,0,0,0.45)]' : ''
       }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-10">
-        <div className="flex items-center justify-between h-16 sm:h-[4.25rem]">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+        <div className="relative flex items-center justify-between h-20 sm:h-24">
           {/* Brand */}
           <a
             href="#home"
             onClick={closeMenu}
-            className="flex items-center gap-2.5 shrink-0 group"
-            aria-label="Razor — Home">
-            <span className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden border border-white/10 bg-white/[0.04] flex items-center justify-center group-hover:border-purple-500/40 transition-colors duration-300 shadow-[0_0_20px_rgba(139,92,246,0.15)]">
-              <img
-                src="/razor.png"
-                alt=""
-                className="w-6 h-6 sm:w-7 sm:h-7 object-contain"
-              />
-            </span>
-            <span className="font-heading font-bold text-base sm:text-lg text-white tracking-tight">
-              Razor
-            </span>
+            className="shrink-0 font-heading font-bold text-xl sm:text-2xl text-white tracking-tight"
+            aria-label="R4ZOR — Home">
+            R4ZOR
           </a>
 
           {/* Desktop links — centered */}
           <nav
             className="hidden lg:flex absolute left-1/2 -translate-x-1/2"
             aria-label="Main navigation">
-            <ul className="flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-md px-1.5 py-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+            <ul className="flex items-center gap-5 xl:gap-8">
               {navLinks.map((link) => {
                 const isActive = activeSection === link.href.substring(1);
                 return (
                   <li key={link.name}>
                     <a
                       href={link.href}
-                      className={`relative px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                      className={`relative block py-2.5 text-base font-medium transition-colors duration-200 ${
                         isActive
-                          ? 'text-white bg-white/[0.1] shadow-[0_0_20px_rgba(139,92,246,0.15)]'
-                          : 'text-gray-400 hover:text-white hover:bg-white/[0.05]'
+                          ? 'text-white'
+                          : 'text-gray-500 hover:text-white'
                       }`}>
                       {link.name}
-                      {isActive && (
-                        <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-purple-400" />
-                      )}
                     </a>
                   </li>
                 );
@@ -101,14 +89,14 @@ export function Navbar() {
           {/* Desktop CTA */}
           <a
             href="#contact"
-            className="hidden lg:inline-flex items-center px-5 py-2.5 rounded-full text-sm font-semibold text-white bg-gradient-glow hover:-translate-y-0.5 transition-transform duration-300 shrink-0">
-            Hire Me
+            className="hidden lg:inline-flex items-center justify-center px-7 py-3.5 rounded-md text-base font-semibold text-white bg-purple-600 hover:bg-purple-500 shadow-[0_8px_24px_rgba(147,51,234,0.25)] hover:-translate-y-0.5 transition-all duration-200 shrink-0">
+            Let&apos;s Talk
           </a>
 
           {/* Mobile menu toggle */}
           <button
             type="button"
-            className="lg:hidden w-11 h-11 min-w-[44px] min-h-[44px] rounded-full border border-white/10 bg-white/[0.04] flex items-center justify-center text-gray-300 hover:text-white hover:border-purple-500/40 transition-all duration-300"
+            className="lg:hidden w-11 h-11 min-w-[44px] min-h-[44px] rounded-md border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-purple-500/40 transition-all duration-200"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isMobileMenuOpen}>
@@ -125,7 +113,7 @@ export function Navbar() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.28, ease: [0.25, 1, 0.5, 1] }}
-            className="lg:hidden overflow-hidden border-t border-white/5 bg-[#080812]/95 backdrop-blur-xl">
+            className="lg:hidden overflow-hidden border-t border-white/[0.06] bg-[#050505]/98 backdrop-blur-xl">
             <nav aria-label="Mobile navigation" className="px-4 sm:px-6 py-4">
               <ul className="flex flex-col gap-1">
                 {navLinks.map((link, i) => {
@@ -141,13 +129,10 @@ export function Navbar() {
                         onClick={closeMenu}
                         className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
                           isActive
-                            ? 'text-white bg-purple-500/15 border border-purple-500/25'
-                            : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
+                            ? 'text-white bg-white/[0.05] border border-white/10'
+                            : 'text-gray-500 hover:text-white hover:bg-white/[0.03] border border-transparent'
                         }`}>
                         {link.name}
-                        {isActive && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
-                        )}
                       </a>
                     </motion.li>
                   );
@@ -156,8 +141,8 @@ export function Navbar() {
               <a
                 href="#contact"
                 onClick={closeMenu}
-                className="mt-4 block w-full text-center px-5 py-3 rounded-full text-sm font-semibold text-white bg-gradient-glow">
-                Hire Me
+                className="mt-4 block w-full text-center px-5 py-3 rounded-md text-sm font-semibold text-white bg-purple-600 hover:bg-purple-500 transition-colors">
+                Let&apos;s Talk
               </a>
             </nav>
           </motion.div>

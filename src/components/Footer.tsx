@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUp, ArrowRight } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
 import { SiGithub, SiFacebook, SiInstagram } from 'react-icons/si';
 import type { IconType } from 'react-icons';
 
@@ -8,7 +8,9 @@ const quickLinks = [
   { label: 'Home', href: '#home' },
   { label: 'About', href: '#about' },
   { label: 'Skills', href: '#skills' },
+  { label: 'Experience', href: '#experience' },
   { label: 'Projects', href: '#projects' },
+  { label: 'Achievements', href: '#achievements' },
   { label: 'Services', href: '#services' },
   { label: 'Contact', href: '#contact' },
 ];
@@ -34,14 +36,14 @@ export function BackToTop() {
       {visible && (
         <motion.a
           href="#home"
-          initial={{ opacity: 0, scale: 0.8, y: 12 }}
+          initial={{ opacity: 0, scale: 0.85, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.8, y: 12 }}
-          whileHover={{ y: -3 }}
-          whileTap={{ scale: 0.95 }}
+          exit={{ opacity: 0, scale: 0.85, y: 10 }}
+          whileHover={{ y: -2 }}
+          whileTap={{ scale: 0.94 }}
           aria-label="Back to top"
-          className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] left-4 sm:left-6 z-50 w-12 h-12 rounded-full glass-card border border-purple-500/30 text-purple-300 hover:text-white hover:border-purple-500/60 hover:shadow-[0_0_24px_rgba(139,92,246,0.4)] flex items-center justify-center transition-colors duration-300">
-          <ArrowUp size={18} />
+          className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] left-4 sm:left-6 z-50 flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-full border border-white/10 bg-[#0a0a12]/90 text-gray-400 backdrop-blur-md transition-colors duration-300 hover:border-purple-400/40 hover:text-white">
+          <ArrowUp size={17} />
         </motion.a>
       )}
     </AnimatePresence>
@@ -51,99 +53,86 @@ export function BackToTop() {
 export function Footer() {
   return (
     <>
-      <footer className="relative bg-[#050505] border-t border-white/5 overflow-hidden">
-        {/* Ambient glow */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute bottom-0 left-1/4 w-96 h-48 bg-purple-600/8 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 right-1/4 w-80 h-40 bg-violet-600/6 rounded-full blur-[100px]" />
-          <div
-            className="absolute inset-0 opacity-[0.02]"
-            style={{
-              backgroundImage:
-                'linear-gradient(rgba(139,92,246,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,0.5) 1px, transparent 1px)',
-              backgroundSize: '48px 48px',
-            }}
-          />
+      <footer className="relative overflow-hidden bg-[#050505]">
+        {/* Soft top edge + ambient wash */}
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-purple-400/40 to-transparent" />
+          <div className="absolute bottom-0 left-1/2 h-40 w-[min(90vw,520px)] -translate-x-1/2 rounded-full bg-purple-600/[0.07] blur-[90px]" />
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 relative z-10 pt-14 sm:pt-16 pb-8">
-          {/* Main grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 mb-12">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 md:px-12 pt-10 sm:pt-12 pb-8 sm:pb-10">
+          {/* Primary row: brand · nav · social */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
+            className="flex flex-col items-center gap-8 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
             {/* Brand */}
-            <div className="sm:col-span-2 lg:col-span-5 flex flex-col items-center sm:items-start text-center sm:text-left">
-              <a
-                href="#home"
-                className="inline-flex items-center gap-2.5 text-2xl font-heading font-bold text-white tracking-tight mb-3 group">
-                <span className="w-10 h-10 rounded-full overflow-hidden border border-purple-500/30 bg-purple-500/10 flex items-center justify-center group-hover:bg-purple-500/20 group-hover:border-purple-500/50 transition-all duration-300 shadow-[0_0_20px_rgba(139,92,246,0.2)]">
-                  <img
-                    src="/razor.png"
-                    alt="Razor logo"
-                    className="w-7 h-7 object-contain"
-                  />
-                </span>
+            <a
+              href="#home"
+              className="group inline-flex items-center gap-2.5 shrink-0"
+              aria-label="Razor — Home">
+              <span className="flex h-9 w-9 items-center justify-center overflow-hidden sm:h-10 sm:w-10">
+                <img
+                  src="/razor.png"
+                  alt=""
+                  className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+                />
+              </span>
+              <span className="font-heading text-lg font-bold tracking-tight text-white sm:text-xl">
                 Razor
-              </a>
-              <p className="text-gray-500 text-sm leading-relaxed max-w-xs mb-5">
-                Web & App Developer building modern digital solutions from the Philippines.
-              </p>
+              </span>
+            </a>
 
-              <div className="flex gap-2.5">
-                {socialLinks.map(({ label, href, icon: Icon }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={label}
-                    className="w-11 h-11 rounded-xl glass-card border border-white/10 text-gray-500 hover:text-white hover:border-purple-500/50 hover:shadow-[0_0_16px_rgba(139,92,246,0.25)] flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5">
-                    <Icon size={16} />
-                  </a>
-                ))}
-              </div>
-            </div>
-
-            {/* Quick links */}
-            <div className="lg:col-span-3 flex flex-col items-center sm:items-start">
-              <h4 className="text-gray-400 font-heading font-semibold mb-4 text-xs tracking-[0.2em] uppercase">
-                Navigate
-              </h4>
-              <ul className="grid grid-cols-2 sm:grid-cols-1 gap-x-6 gap-y-2">
+            {/* Nav — single horizontal strip */}
+            <nav aria-label="Footer navigation" className="w-full max-w-xl lg:max-w-none lg:flex-1">
+              <ul className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 sm:gap-x-7">
                 {quickLinks.map((link) => (
                   <li key={link.label}>
                     <a
                       href={link.href}
-                      className="text-gray-500 hover:text-purple-300 text-sm transition-colors duration-200 flex items-center gap-2 group">
-                      <span className="w-1 h-1 rounded-full bg-purple-500/0 group-hover:bg-purple-500 transition-all duration-200 shrink-0" />
+                      className="relative text-[13px] text-gray-500 transition-colors duration-200 hover:text-white sm:text-sm after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-purple-400 after:transition-all after:duration-300 hover:after:w-full">
                       {link.label}
                     </a>
                   </li>
                 ))}
               </ul>
-            </div>
+            </nav>
 
-            {/* Mini CTA */}
-            <div className="lg:col-span-4 flex flex-col items-center sm:items-start justify-center">
-              <h4 className="text-gray-400 font-heading font-semibold mb-4 text-xs tracking-[0.2em] uppercase">
-                Let&apos;s Work Together
-              </h4>
-              <p className="text-gray-500 text-sm mb-5 max-w-xs text-center sm:text-left">
-                Open to freelance projects, collaborations, and new opportunities.
-              </p>
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-white bg-gradient-glow hover:-translate-y-0.5 transition-transform duration-300">
-                Get in touch
-                <ArrowRight size={15} />
-              </a>
+            {/* Social */}
+            <div className="flex items-center gap-1 shrink-0">
+              {socialLinks.map(({ label, href, icon: Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="flex h-10 w-10 items-center justify-center rounded-full text-gray-500 transition-all duration-300 hover:bg-white/[0.04] hover:text-purple-300">
+                  <Icon size={16} />
+                </a>
+              ))}
             </div>
-          </div>
+          </motion.div>
 
-          {/* Bottom bar */}
-          <div className="border-t border-white/6 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3">
-            <p className="text-gray-700 text-xs order-1 sm:order-2">
-              © 2026 R4zor08. All rights reserved.
+          {/* Bottom meta */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="mt-8 sm:mt-10 flex flex-col items-center justify-between gap-3 border-t border-white/[0.06] pt-6 sm:flex-row">
+            <p className="text-[11px] tracking-wide text-gray-600 sm:text-xs">
+              © 2026 R4zor08
             </p>
-          </div>
+            <a
+              href="#contact"
+              className="group inline-flex items-center gap-1.5 text-[11px] tracking-wide text-gray-500 transition-colors duration-200 hover:text-purple-300 sm:text-xs">
+              Available for work
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.7)] transition-transform duration-300 group-hover:scale-110" />
+            </a>
+          </motion.div>
         </div>
       </footer>
 
