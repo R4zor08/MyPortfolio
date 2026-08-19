@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { PixelVanishAvatar } from './PixelVanishAvatar';
 
-const highlights = [
+  const highlights = [
   {
     icon: Code,
     number: '01',
@@ -260,17 +260,17 @@ export function About() {
                       </div>
                       <div className="min-w-0 flex-1 pr-2">
                         <h3 className="font-heading font-semibold text-sm sm:text-base md:text-lg text-white mb-1 sm:mb-1.5 group-hover:text-purple-100 transition-colors">
-                          {item.title}
-                        </h3>
+                  {item.title}
+                </h3>
                         <p className="text-gray-500 text-xs sm:text-sm leading-relaxed group-hover:text-gray-400 transition-colors">
                           {item.description}
                         </p>
                       </div>
                     </div>
-                  </motion.div>
+              </motion.div>
                 );
               })}
-            </motion.div>
+          </motion.div>
           </div>
         </div>
       </div>
