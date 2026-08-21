@@ -585,19 +585,19 @@ export function Experiences() {
               onClick={openGallery}
               className="w-full text-left glass-card rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-purple-500/25 bg-gradient-to-br from-white/[0.03] via-transparent to-purple-500/[0.03] relative overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:border-purple-400/55 hover:shadow-[0_14px_34px_rgba(76,29,149,0.35)] focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/60">
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-purple-500/[0.08] to-transparent" />
-              <div className="relative z-10 flex items-start justify-between gap-3 mb-3">
+              <div className="relative z-10 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-3 mb-3">
                 <div className="min-w-0">
                   <p className="inline-flex mb-2 text-[10px] px-2 py-1 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-300 tracking-wider uppercase">
                     Featured Experience
                   </p>
-                  <h3 className="font-heading font-semibold text-lg text-white">
+                  <h3 className="font-heading font-semibold text-base sm:text-lg text-white">
                     {featuredExperience.role}
                   </h3>
                   <p className="text-purple-300/95 text-sm font-medium">
                     {featuredExperience.company}
                   </p>
                 </div>
-                <span className="text-[11px] sm:text-xs font-medium tracking-wide text-purple-300/85 bg-purple-500/10 border border-purple-500/25 rounded-full px-3 py-1 shrink-0">
+                <span className="self-start text-[10px] sm:text-xs font-medium tracking-wide text-purple-300/85 bg-purple-500/10 border border-purple-500/25 rounded-full px-2.5 sm:px-3 py-1">
                   {featuredExperience.period}
                 </span>
               </div>
@@ -629,7 +629,7 @@ export function Experiences() {
             animate={{ opacity: 1 }}
             exit={reducedMotion ? {} : { opacity: 0 }}
             transition={{ duration: 0.26 }}
-            className="fixed inset-0 z-[120] bg-black/70 backdrop-blur-md p-2 sm:p-4"
+            className="fixed inset-0 z-[120] bg-black/70 backdrop-blur-md p-1.5 sm:p-4"
             aria-modal="true"
             role="dialog"
             aria-label="OJT Experience Gallery"
@@ -641,23 +641,23 @@ export function Experiences() {
               exit={reducedMotion ? {} : { opacity: 0, y: 12, scale: 0.985 }}
               transition={{ duration: 0.32 }}
               onClick={(e) => e.stopPropagation()}
-              className="mx-auto w-[min(92vw,1320px)] h-[90vh] rounded-3xl border border-purple-500/25 bg-[#0b0815] shadow-[0_24px_90px_rgba(0,0,0,0.7)] overflow-hidden flex flex-col relative">
-              <div className="relative px-4 sm:px-6 py-4 sm:py-5 border-b border-white/10 bg-[#120f1f]/95 backdrop-blur-xl">
+              className="mx-auto w-[min(100%,1320px)] h-[min(92dvh,900px)] max-h-[calc(100dvh-1rem)] rounded-2xl sm:rounded-3xl border border-purple-500/25 bg-[#0b0815] shadow-[0_24px_90px_rgba(0,0,0,0.7)] overflow-hidden flex flex-col relative">
+              <div className="relative px-3 sm:px-6 py-3.5 sm:py-5 border-b border-white/10 bg-[#120f1f]/95 backdrop-blur-xl">
                 <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'linear-gradient(rgba(168,85,247,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(168,85,247,0.5) 1px, transparent 1px)', backgroundSize: '36px 36px' }} />
                 <div className="absolute -top-10 right-10 h-28 w-28 bg-purple-500/15 rounded-full blur-3xl pointer-events-none" />
-                <div className="relative flex items-start justify-between gap-4">
-                  <div className="min-w-0">
+                <div className="relative flex items-start justify-between gap-3">
+                  <div className="min-w-0 pr-2">
                     <p className="text-[10px] sm:text-xs tracking-[0.22em] uppercase text-purple-300 mb-1">
                       OJT Journey
                     </p>
-                    <h3 className="font-heading text-2xl sm:text-3xl font-bold text-white">
+                    <h3 className="font-heading text-xl sm:text-3xl font-bold text-white leading-tight">
                       Building. Testing. Learning.
                     </h3>
-                    <p className="text-sm text-gray-300 mt-1">
+                    <p className="text-xs sm:text-sm text-gray-300 mt-1">
                       Aquila Softwares • Software Developer Intern
                     </p>
-                    <p className="text-xs sm:text-sm text-gray-400">June 15 – August 7, 2026</p>
-                    <p className="mt-2 max-w-3xl text-xs sm:text-sm text-gray-400">
+                    <p className="text-[11px] sm:text-sm text-gray-400">June 15 – August 7, 2026</p>
+                    <p className="mt-2 max-w-3xl text-xs sm:text-sm text-gray-400 leading-relaxed hidden sm:block">
                       A visual walkthrough of the projects, challenges, development tasks, and
                       lessons I experienced throughout my software development internship.
                     </p>
@@ -666,7 +666,7 @@ export function Experiences() {
                     type="button"
                     onClick={closeGallery}
                     aria-label="Close gallery"
-                    className="w-10 h-10 rounded-full border border-white/10 bg-white/[0.03] text-gray-400 hover:text-white hover:border-purple-500/50 transition-colors flex items-center justify-center shrink-0">
+                    className="w-10 h-10 min-w-[40px] rounded-full border border-white/10 bg-white/[0.03] text-gray-400 hover:text-white hover:border-purple-500/50 transition-colors flex items-center justify-center shrink-0">
                     <X size={18} />
                   </button>
                 </div>
@@ -811,7 +811,7 @@ export function Experiences() {
                                 const sibling = target.nextElementSibling as HTMLElement | null;
                                 if (sibling) sibling.style.display = 'flex';
                               }}
-                              className="w-full h-auto max-h-[74dvh] object-contain"
+                              className="w-full h-auto max-h-[42dvh] lg:max-h-[74dvh] object-contain"
                             />
                             <div className="hidden absolute inset-0 items-center justify-center text-xs text-gray-500">
                               Documentation Photo
