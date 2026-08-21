@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { useCallback, useEffect, useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import {
   Trophy,
   Rocket,
@@ -8,6 +8,7 @@ import {
   Github,
   ChevronLeft,
   ChevronRight,
+  ArrowUpRight,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -15,8 +16,8 @@ type Achievement = {
   icon: LucideIcon;
   title: string;
   description: string;
-  accent: string;
   number: string;
+  tone: string;
 };
 
 const achievements: Achievement[] = [
@@ -26,7 +27,7 @@ const achievements: Achievement[] = [
     title: '5+ Projects Shipped',
     description:
       'Built and published full applications across web, mobile, AI, and IoT — from concept to working demos.',
-    accent: 'from-violet-500/25 to-purple-600/5',
+    tone: 'from-[#1a1230] via-[#241848] to-[#120c22]',
   },
   {
     icon: Layers,
@@ -34,7 +35,7 @@ const achievements: Achievement[] = [
     title: 'Full-Stack Delivery',
     description:
       'End-to-end experience with React, Node.js, Express, MongoDB, Flutter, and REST APIs in real project builds.',
-    accent: 'from-purple-500/25 to-fuchsia-600/5',
+    tone: 'from-[#18122e] via-[#2a1850] to-[#100c1c]',
   },
   {
     icon: Cpu,
@@ -42,7 +43,7 @@ const achievements: Achievement[] = [
     title: 'AI & IoT Systems',
     description:
       'Developed NEMSUTalks for AI sentiment analysis and FIREGUARD3 for real-time IoT fire monitoring.',
-    accent: 'from-indigo-500/25 to-violet-600/5',
+    tone: 'from-[#14182e] via-[#1e2450] to-[#0e1020]',
   },
   {
     icon: Github,
@@ -50,7 +51,7 @@ const achievements: Achievement[] = [
     title: 'Open GitHub Portfolio',
     description:
       'Active repositories under R4zor08 showcasing CITEzen, WheelGo, WashGO, and more for public review.',
-    accent: 'from-fuchsia-500/25 to-purple-600/5',
+    tone: 'from-[#1c1230] via-[#3a1850] to-[#120a1c]',
   },
   {
     icon: Trophy,
@@ -58,13 +59,41 @@ const achievements: Achievement[] = [
     title: 'Problem-Focused Builds',
     description:
       'Focused on practical campus and community tools — student concerns, bookings, rentals, and safety systems.',
-    accent: 'from-amber-500/20 to-purple-600/5',
+    tone: 'from-[#1c1620] via-[#3a2818] to-[#120e0c]',
   },
 ];
 
-const AUTOPLAY_MS = 4200;
+const AUTOPLAY_MS = 4500;
 
-function AchievementCard({
+/** Cylindrical carousel math — cards sit on an invisible arc facing the viewer */
+function getCylinderStyle(
+  index: number,
+  active: number,
+  total: number,
+  compact: boolean
+) {
+  let dist = index - active;
+  if (dist > total / 2) dist -= total;
+  if (dist < -total / 2) dist += total;
+
+  const abs = Math.abs(dist);
+  const rotateY = dist * (compact ? -22 : -34);
+  const translateX = dist * (compact ? 48 : 62);
+  const translateZ = -Math.abs(dist) * (compact ? 70 : 110);
+  const scale = dist === 0 ? 1 : Math.max(compact ? 0.78 : 0.7, 1 - abs * (compact ? 0.1 : 0.13));
+  const opacity = dist === 0 ? 1 : Math.max(0, 1 - abs * (compact ? 0.42 : 0.34));
+  const brightness = dist === 0 ? 1 : Math.max(0.42, 1 - abs * 0.24);
+
+  return {
+    transform: `translate(-50%, -50%) translateX(${translateX}%) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
+    opacity,
+    zIndex: 40 - abs * 5,
+    filter: `brightness(${brightness})`,
+    pointerEvents: (abs <= (compact ? 1 : 2) ? 'auto' : 'none') as React.CSSProperties['pointerEvents'],
+  };
+}
+
+function AchievementMediaCard({
   item,
   isActive,
 }: {
@@ -74,59 +103,56 @@ function AchievementCard({
   const Icon = item.icon;
 
   return (
-    <article
-      className={`relative h-full w-full overflow-hidden rounded-2xl sm:rounded-3xl border p-6 sm:p-8 transition-all duration-500 ${
+    <div
+      className={`relative h-full w-full overflow-hidden rounded-xl border transition-shadow duration-500 ${
         isActive
-          ? 'border-purple-400/40 bg-[#120d1f] shadow-[0_20px_60px_rgba(76,29,149,0.35)]'
-          : 'border-white/10 bg-[#100c1a] shadow-[0_10px_30px_rgba(0,0,0,0.35)]'
+          ? 'border-purple-400/35 shadow-[0_18px_50px_rgba(76,29,149,0.35)]'
+          : 'border-white/10 shadow-[0_10px_28px_rgba(0,0,0,0.35)]'
       }`}>
+      {/* Photo-like filled card surface */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${item.tone}`} />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(168,85,247,0.22),transparent_55%)]" />
       <div
-        className={`absolute inset-0 bg-gradient-to-br ${item.accent} transition-opacity duration-500 ${
-          isActive ? 'opacity-100' : 'opacity-40'
-        }`}
+        className="absolute inset-0 opacity-[0.07]"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
+          backgroundSize: '28px 28px',
+        }}
       />
-      <div className="absolute -top-16 -right-16 h-40 w-40 rounded-full bg-purple-500/15 blur-3xl" />
-      <div className="absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-purple-300/50 to-transparent" />
 
-      <div className="relative z-10 flex h-full flex-col">
-        <div className="mb-6 flex items-start justify-between">
+      {/* Soft vignette like product photos */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+
+      <div className="relative z-10 flex h-full flex-col p-4 sm:p-6">
+        <div className="flex items-start justify-between gap-2">
           <div
-            className={`flex h-14 w-14 items-center justify-center rounded-2xl border transition-all duration-400 ${
+            className={`flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl sm:rounded-2xl border backdrop-blur-sm transition-all duration-400 ${
               isActive
-                ? 'border-purple-400/50 bg-purple-500/20 text-purple-200 shadow-[0_0_24px_rgba(139,92,246,0.35)]'
-                : 'border-purple-500/25 bg-purple-500/10 text-purple-300'
+                ? 'border-purple-300/40 bg-purple-500/20 text-purple-100 shadow-[0_0_22px_rgba(139,92,246,0.4)]'
+                : 'border-white/15 bg-white/5 text-purple-200/80'
             }`}>
-            <Icon size={24} />
+            <Icon size={22} className="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
           </div>
-          <span className="font-heading text-4xl font-bold text-white/[0.06]">
-            {item.number}
-          </span>
+          <span className="font-heading text-2xl sm:text-3xl font-bold text-white/10">{item.number}</span>
         </div>
 
-        <h3
-          className={`mb-3 font-heading text-xl font-semibold sm:text-2xl transition-colors duration-300 ${
-            isActive ? 'text-white' : 'text-gray-200'
-          }`}>
-          {item.title}
-        </h3>
-        <p
-          className={`text-sm leading-relaxed sm:text-[15px] transition-colors duration-300 ${
-            isActive ? 'text-gray-300' : 'text-gray-500'
-          }`}>
-          {item.description}
-        </p>
-
-        <div className="mt-auto pt-6">
-          <div
-            className={`h-1 w-16 rounded-full transition-all duration-500 ${
-              isActive
-                ? 'bg-gradient-to-r from-purple-400 to-fuchsia-400 shadow-[0_0_12px_rgba(168,85,247,0.6)]'
-                : 'bg-white/10'
-            }`}
-          />
+        <div className="mt-auto">
+          <h3
+            className={`font-heading text-base sm:text-xl font-semibold leading-tight mb-1.5 sm:mb-2 ${
+              isActive ? 'text-white' : 'text-white/85'
+            }`}>
+            {item.title}
+          </h3>
+          <p
+            className={`text-xs sm:text-sm leading-relaxed line-clamp-3 ${
+              isActive ? 'text-gray-300' : 'text-gray-400/80'
+            }`}>
+            {item.description}
+          </p>
         </div>
       </div>
-    </article>
+    </div>
   );
 }
 
@@ -135,111 +161,38 @@ export function Achievements() {
   const count = achievements.length;
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [direction, setDirection] = useState(1);
-  const dragStartX = useRef<number | null>(null);
-  const dragDelta = useRef(0);
+  const [dragStart, setDragStart] = useState<number | null>(null);
+  const [compact, setCompact] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 639px)');
+    const sync = () => setCompact(mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
 
   const goTo = useCallback(
-    (next: number, dir = 1) => {
-      setDirection(dir);
-      setIndex(((next % count) + count) % count);
-    },
+    (next: number) => setIndex(((next % count) + count) % count),
     [count]
   );
-
-  const next = useCallback(() => goTo(index + 1, 1), [goTo, index]);
-  const prev = useCallback(() => goTo(index - 1, -1), [goTo, index]);
+  const next = useCallback(() => goTo(index + 1), [goTo, index]);
+  const prev = useCallback(() => goTo(index - 1), [goTo, index]);
 
   useEffect(() => {
     if (paused || reducedMotion) return;
-    const id = window.setInterval(() => {
-      setDirection(1);
-      setIndex((i) => (i + 1) % count);
-    }, AUTOPLAY_MS);
+    const id = window.setInterval(() => goTo(index + 1), AUTOPLAY_MS);
     return () => window.clearInterval(id);
-  }, [paused, reducedMotion, count]);
+  }, [paused, reducedMotion, index, goTo]);
 
-  const getCardStyle = (i: number) => {
-    let dist = i - index;
-    if (dist > count / 2) dist -= count;
-    if (dist < -count / 2) dist += count;
-
-    if (dist === 0) {
-      return {
-        transform: 'translateX(0%) scale(1) rotateY(0deg)',
-        opacity: 1,
-        zIndex: 30,
-        filter: 'brightness(1)',
-        pointerEvents: 'auto' as const,
-      };
-    }
-    if (dist === -1) {
-      return {
-        transform: 'translateX(-72%) scale(0.86) rotateY(28deg)',
-        opacity: 0.55,
-        zIndex: 20,
-        filter: 'brightness(0.72)',
-        pointerEvents: 'auto' as const,
-      };
-    }
-    if (dist === 1) {
-      return {
-        transform: 'translateX(72%) scale(0.86) rotateY(-28deg)',
-        opacity: 0.55,
-        zIndex: 20,
-        filter: 'brightness(0.72)',
-        pointerEvents: 'auto' as const,
-      };
-    }
-    if (dist === -2) {
-      return {
-        transform: 'translateX(-125%) scale(0.72) rotateY(42deg)',
-        opacity: 0.2,
-        zIndex: 10,
-        filter: 'brightness(0.45)',
-        pointerEvents: 'none' as const,
-      };
-    }
-    if (dist === 2) {
-      return {
-        transform: 'translateX(125%) scale(0.72) rotateY(-42deg)',
-        opacity: 0.2,
-        zIndex: 10,
-        filter: 'brightness(0.45)',
-        pointerEvents: 'none' as const,
-      };
-    }
-    return {
-      transform: `translateX(${dist > 0 ? 160 : -160}%) scale(0.55) rotateY(${
-        dist > 0 ? -55 : 55
-      }deg)`,
-      opacity: 0,
-      zIndex: 0,
-      filter: 'brightness(0.3)',
-      pointerEvents: 'none' as const,
-    };
-  };
-
-  const onPointerDown = (clientX: number) => {
-    dragStartX.current = clientX;
-    dragDelta.current = 0;
-    setPaused(true);
-  };
-
-  const onPointerMove = (clientX: number) => {
-    if (dragStartX.current === null) return;
-    dragDelta.current = clientX - dragStartX.current;
-  };
-
-  const onPointerUp = () => {
-    if (dragStartX.current === null) return;
-    const dx = dragDelta.current;
-    dragStartX.current = null;
-    if (Math.abs(dx) > 45) {
-      if (dx < 0) next();
-      else prev();
-    }
-    setPaused(false);
+  const onPointerDown = (x: number) => setDragStart(x);
+  const onPointerUp = (x: number) => {
+    if (dragStart === null) return;
+    const dx = x - dragStart;
+    setDragStart(null);
+    if (Math.abs(dx) < 40) return;
+    if (dx < 0) next();
+    else prev();
   };
 
   return (
@@ -249,25 +202,21 @@ export function Achievements() {
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div className="absolute top-0 left-1/4 w-72 h-72 bg-purple-600/10 rounded-full blur-[120px]" />
         <div className="absolute bottom-0 right-0 w-80 h-80 bg-violet-600/8 rounded-full blur-[130px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[50vh] bg-purple-600/8 rounded-full blur-[150px]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.55 }}
-          className="mb-8 sm:mb-12 text-center">
+          transition={{ duration: 0.5 }}
+          className="mb-4 sm:mb-8 text-center">
           <h2
-            className="font-heading font-bold text-white tracking-tight mb-4"
-            style={{ fontSize: 'clamp(2rem, 5vw, 3rem)' }}>
+            className="font-heading font-bold text-white tracking-tight mb-3 sm:mb-4"
+            style={{ fontSize: 'clamp(1.75rem, 5vw, 3rem)' }}>
             My <span className="text-gradient">Achievements</span>
           </h2>
           <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent rounded-full mx-auto shadow-[0_0_12px_rgba(168,85,247,0.7)]" />
-          <p className="mt-4 text-xs text-gray-500 md:hidden tracking-wide">
-            Swipe to explore →
-          </p>
         </motion.div>
 
         <div
@@ -275,124 +224,82 @@ export function Achievements() {
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
           onTouchStart={(e) => onPointerDown(e.touches[0].clientX)}
-          onTouchMove={(e) => onPointerMove(e.touches[0].clientX)}
-          onTouchEnd={onPointerUp}
+          onTouchEnd={(e) => onPointerUp(e.changedTouches[0].clientX)}
           onMouseDown={(e) => onPointerDown(e.clientX)}
-          onMouseMove={(e) => {
-            if (e.buttons === 1) onPointerMove(e.clientX);
-          }}
-          onMouseUp={onPointerUp}>
-          {/* Side controls */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 right-0 z-40 flex items-center justify-between px-1 sm:px-2">
+          onMouseUp={(e) => onPointerUp(e.clientX)}>
+          {/* Cylinder stage */}
+          <div className="relative mx-auto h-[300px] sm:h-[400px] md:h-[420px] w-full overflow-hidden">
+            <div
+              className="absolute inset-0 flex items-center justify-center"
+              style={{
+                perspective: reducedMotion ? undefined : compact ? '900px' : '1400px',
+                perspectiveOrigin: '50% 50%',
+              }}>
+              {achievements.map((item, i) => {
+                const style = getCylinderStyle(i, index, count, compact);
+                const isActive = i === index;
+
+                return (
+                  <div
+                    key={item.number}
+                    role="button"
+                    tabIndex={isActive ? 0 : -1}
+                    aria-label={item.title}
+                    aria-current={isActive}
+                    onClick={() => {
+                      if (i !== index) goTo(i);
+                    }}
+                    className="absolute left-1/2 top-1/2 h-[240px] w-[min(78vw,240px)] sm:h-[310px] sm:w-[280px] md:h-[330px] md:w-[300px] cursor-pointer [transform-style:preserve-3d] will-change-transform"
+                    style={{
+                      transform: style.transform,
+                      opacity: style.opacity,
+                      zIndex: style.zIndex,
+                      filter: style.filter,
+                      pointerEvents: style.pointerEvents,
+                      transition: reducedMotion
+                        ? 'opacity 0.2s ease'
+                        : 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.55s ease, filter 0.55s ease',
+                    }}>
+                    <AchievementMediaCard item={item} isActive={isActive} />
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Soft purple glow under active card */}
+            <div className="pointer-events-none absolute bottom-6 sm:bottom-8 left-1/2 h-8 sm:h-10 w-[min(55vw,240px)] -translate-x-1/2 rounded-[100%] bg-purple-500/35 blur-2xl" />
+            <div className="pointer-events-none absolute bottom-8 sm:bottom-10 left-1/2 h-3 sm:h-4 w-[min(40vw,160px)] -translate-x-1/2 rounded-[100%] bg-fuchsia-400/25 blur-xl" />
+          </div>
+
+          {/* Controls */}
+          <div className="relative z-20 -mt-1 sm:-mt-2 flex flex-wrap items-center justify-center gap-3 sm:gap-7 px-1">
             <button
               type="button"
               aria-label="Previous achievement"
               onClick={prev}
-              className="pointer-events-auto flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-black/40 text-gray-300 backdrop-blur-md transition-all duration-300 hover:border-purple-400/50 hover:text-white hover:shadow-[0_0_20px_rgba(139,92,246,0.35)]">
-              <ChevronLeft size={20} />
+              className="flex h-11 w-11 items-center justify-center text-purple-300/80 transition-colors hover:text-purple-200">
+              <ChevronLeft size={26} strokeWidth={1.5} />
             </button>
+
+            <a
+              href="#projects"
+              className="inline-flex items-center gap-2 rounded-full border border-purple-400/45 bg-transparent px-4 sm:px-6 py-2.5 text-sm font-medium text-purple-200 transition-all duration-300 hover:border-purple-300/70 hover:bg-purple-500/10 hover:shadow-[0_0_24px_rgba(139,92,246,0.25)]">
+              View Projects
+              <ArrowUpRight size={15} strokeWidth={1.75} />
+            </a>
+
             <button
               type="button"
               aria-label="Next achievement"
               onClick={next}
-              className="pointer-events-auto flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-black/40 text-gray-300 backdrop-blur-md transition-all duration-300 hover:border-purple-400/50 hover:text-white hover:shadow-[0_0_20px_rgba(139,92,246,0.35)]">
-              <ChevronRight size={20} />
+              className="flex h-11 w-11 items-center justify-center text-purple-300/80 transition-colors hover:text-purple-200">
+              <ChevronRight size={26} strokeWidth={1.5} />
             </button>
           </div>
 
-          {/* 3D cover-flow stage */}
-          <div className="relative mx-auto h-[340px] sm:h-[380px] md:h-[400px] w-full overflow-hidden [perspective:1200px]">
-            {achievements.map((item, i) => {
-              const style = getCardStyle(i);
-              const isActive = i === index;
-
-              return (
-                <div
-                  key={item.title}
-                  role="button"
-                  tabIndex={isActive ? 0 : -1}
-                  aria-label={item.title}
-                  onClick={() => {
-                    if (i !== index) goTo(i, i > index ? 1 : -1);
-                  }}
-                  className="absolute left-1/2 top-1/2 h-[280px] w-[min(82vw,320px)] sm:h-[300px] sm:w-[360px] cursor-pointer [transform-style:preserve-3d] will-change-transform"
-                  style={{
-                    transform: `translate(-50%, -50%) ${style.transform}`,
-                    opacity: style.opacity,
-                    zIndex: style.zIndex,
-                    filter: style.filter,
-                    pointerEvents: style.pointerEvents,
-                    transition: reducedMotion
-                      ? 'opacity 0.2s ease'
-                      : 'transform 0.65s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.65s ease, filter 0.65s ease',
-                  }}>
-                  <AchievementCard item={item} isActive={isActive} />
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Active title crossfade under carousel */}
-          <div className="relative mx-auto mt-2 h-8 max-w-md overflow-hidden text-center">
-            <AnimatePresence mode="wait" custom={direction}>
-              <motion.p
-                key={achievements[index].title}
-                custom={direction}
-                initial={
-                  reducedMotion
-                    ? { opacity: 0 }
-                    : { opacity: 0, y: direction > 0 ? 12 : -12 }
-                }
-                animate={{ opacity: 1, y: 0 }}
-                exit={
-                  reducedMotion
-                    ? { opacity: 0 }
-                    : { opacity: 0, y: direction > 0 ? -12 : 12 }
-                }
-                transition={{ duration: 0.28 }}
-                className="absolute inset-0 text-sm text-purple-300/90 font-medium truncate px-4">
-                {achievements[index].title}
-              </motion.p>
-            </AnimatePresence>
-          </div>
-
-          {/* Progress dots */}
-          <div className="mt-5 flex items-center justify-center gap-2">
-            {achievements.map((item, i) => {
-              const active = i === index;
-              return (
-                <button
-                  key={item.title}
-                  type="button"
-                  aria-label={`Go to ${item.title}`}
-                  aria-current={active}
-                  onClick={() => goTo(i, i > index ? 1 : -1)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    active
-                      ? 'w-8 bg-gradient-to-r from-purple-400 to-fuchsia-400 shadow-[0_0_12px_rgba(168,85,247,0.55)]'
-                      : 'w-2 bg-white/20 hover:bg-white/40'
-                  }`}
-                />
-              );
-            })}
-          </div>
-
-          {/* Autoplay progress bar */}
-          {!reducedMotion && (
-            <div className="mx-auto mt-4 h-[2px] w-40 overflow-hidden rounded-full bg-white/10">
-              <motion.div
-                key={`${index}-${paused}`}
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: paused ? undefined : 1 }}
-                transition={{
-                  duration: paused ? 0 : AUTOPLAY_MS / 1000,
-                  ease: 'linear',
-                }}
-                className="h-full origin-left bg-gradient-to-r from-purple-500 to-fuchsia-400"
-                style={paused ? { scaleX: 0 } : undefined}
-              />
-            </div>
-          )}
+          <p className="mt-3 sm:mt-4 text-center text-[11px] tracking-[0.2em] text-gray-500">
+            {String(index + 1).padStart(2, '0')} — {String(count).padStart(2, '0')}
+          </p>
         </div>
       </div>
     </section>
