@@ -28,329 +28,139 @@ const weekLabels = ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8'];
 
 const internshipStories: StoryItem[] = [
   {
-    id: 'w1-june-15-assessment',
+    id: 'week-1',
     image: '/images/experience/aquila-softwares/week-1/june-15-01.jpg',
-    title: 'Company Orientation & Technical Assessment',
-    date: 'June 15, 2026',
-    week: 1,
-    category: 'Orientation',
-    overview:
-      "This was my first day at Aquila Softwares. I learned the company background, services, work environment, software projects, expectations, and development process. I also completed written and hands-on programming examinations for technical assessment.",
-    tasks: [
-      'Introduced ourselves to the company',
-      'Learned the company background and workflow',
-      'Took a written examination',
-      'Completed a hands-on programming examination',
-      'Underwent technical assessment',
-    ],
-    skills: ['Communication', 'Technical Assessment'],
-  },
-  {
-    id: 'w1-june-17-libraryms',
-    image: '/images/experience/aquila-softwares/week-1/june-17.jpg',
-    title: 'LibraryMS Backend Bug Fixing',
-    date: 'June 17, 2026',
-    week: 1,
-    category: 'Backend Development',
-    overview:
-      'I identified and fixed assigned bugs in the LibraryMS backend training project by reviewing existing code, testing features, and resolving issues.',
-    tasks: [
-      'Reviewed existing backend code',
-      'Identified and fixed assigned issues',
-      'Tested core system features',
-      'Completed the LibraryMS backend training task',
-    ],
-    skills: ['Debugging', 'Backend Development', 'Testing'],
-  },
-  {
-    id: 'w1-june-18-inventory',
-    image: '/images/experience/aquila-softwares/week-1/june-18.jpg',
-    title: 'Inventory System Backend Development',
-    date: 'June 18, 2026',
-    week: 1,
-    category: 'Backend Development',
-    overview:
-      'I started my backend role on the Inventory System, implementing functionality, handling database communication, and exposing APIs needed by frontend teammates.',
-    tasks: [
-      'Implemented backend functionality',
-      'Worked with database communication',
-      'Provided API endpoints for frontend',
-      'Collaborated with teammates on integration',
-    ],
-    skills: ['Backend Development', 'API Development', 'Team Collaboration'],
-  },
-  {
-    id: 'w1-june-19-wfh',
-    image: '/images/experience/aquila-softwares/week-1/june-19.jpg',
-    title: 'Inventory Completion & Presentation Preparation',
-    date: 'June 19, 2026',
+    title: 'Orientation, Assessment & Training Builds',
+    date: 'June 15 – 19, 2026',
     week: 1,
     category: 'Training',
-    badge: 'WFH',
     overview:
-      'Because the office was crowded, we worked remotely while finalizing Inventory System features, fixing issues, and preparing our demonstration.',
+      'Week 1 was my first week at Aquila Softwares. I completed company orientation and technical assessment, then started backend training on LibraryMS bug fixing and Inventory System APIs. We also worked remotely to finish remaining Inventory features and prepare the project demonstration.',
     tasks: [
-      'Continued development remotely',
-      'Completed remaining features',
-      'Fixed system issues',
-      'Prepared project demonstration and roles',
+      'Completed company orientation and technical assessment',
+      'Fixed assigned bugs in the LibraryMS backend',
+      'Built Inventory System backend APIs for frontend teammates',
+      'Finished remaining features remotely and prepared the demo',
     ],
-    skills: ['Remote Work', 'Testing', 'Presentation'],
+    skills: ['Communication', 'Backend Development', 'Debugging', 'API Development'],
   },
   {
-    id: 'w2-june-23-peplo',
+    id: 'week-2',
     image: '/images/experience/aquila-softwares/week-2/june-23.jpg',
     title: 'First Company Project – Peplo HRIS',
-    date: 'June 23, 2026',
+    date: 'June 23 – 26, 2026',
     week: 2,
     category: 'Backend Development',
     overview:
-      'After training, I was assigned to Peplo HRIS as a backend developer. I familiarized myself with the project structure and codebase before implementation.',
+      'Week 2 was my first week on a real company project. I was assigned to Peplo HRIS as a backend developer, implemented Regular and Flexible attendance policy logic, submitted a Pull Request, then helped with frontend/backend integration testing and Git workflow support for a teammate.',
     tasks: [
-      'Reviewed existing project architecture',
-      'Understood backend code flow',
-      'Prepared development environment for tasks',
+      'Studied the Peplo HRIS architecture and codebase',
+      'Implemented Regular and Flexible attendance policy logic',
+      'Tested, committed, and opened a Pull Request',
+      'Validated integration and guided a teammate on Git workflow',
     ],
-    skills: ['Backend Development', 'Codebase Familiarization'],
+    skills: ['Backend Development', 'Git', 'Testing', 'Integration'],
   },
   {
-    id: 'w2-june-24-attendance-policy',
-    image: '/images/experience/aquila-softwares/week-2/june-24.jpg',
-    title: 'Regular & Flexible Attendance Policy Development',
-    date: 'June 24, 2026',
-    week: 2,
-    category: 'Backend Development',
-    overview:
-      'I implemented Shift Management logic for Regular and Flexible attendance policies, tested my work, and submitted it through a Pull Request.',
-    tasks: [
-      'Developed attendance policy logic',
-      'Supported Regular and Flexible schedules',
-      'Tested completed functionality',
-      'Committed and pushed code',
-      'Created Pull Request for review',
-    ],
-    skills: ['Backend Development', 'Git', 'Testing', 'Pull Request'],
-  },
-  {
-    id: 'w2-june-26-integration',
-    image: '/images/experience/aquila-softwares/week-2/june-26.jpg',
-    title: 'Frontend & Backend Integration Testing',
-    date: 'June 26, 2026',
-    week: 2,
-    category: 'Integration',
-    overview:
-      'After merge approval, I helped with backend/frontend integration testing and guided a teammate on commit, push, and Pull Request workflows.',
-    tasks: [
-      'Validated backend/frontend integration',
-      'Reviewed integration behavior',
-      'Mentored teammate on Git workflow',
-    ],
-    skills: ['Integration', 'Git', 'Team Support'],
-  },
-  {
-    id: 'w3-july-02-netpay',
+    id: 'week-3',
     image: '/images/experience/aquila-softwares/week-3/july-02.jpg',
-    title: 'Payroll Net Pay Calculation Fix',
-    date: 'July 2, 2026',
+    title: 'Payroll Net Pay & Payslip API Fixes',
+    date: 'July 2 – 3, 2026',
     week: 3,
-    category: 'Backend Development',
+    category: 'Payroll Development',
     overview:
-      'I fixed a payroll backend issue where Absence, Tardiness, and Undertime were deducted twice, causing incorrect Net Pay. I corrected logic, tested, and submitted via Pull Request.',
+      'Week 3 focused on payroll accuracy. I fixed a Net Pay bug where Absence, Tardiness, and Undertime were deducted twice, then updated the Payslip API so payroll and employee data displayed correctly. Both fixes were tested and merged through Pull Requests.',
     tasks: [
-      'Analyzed payroll calculation logic',
-      'Identified duplicate deductions',
-      'Corrected Net Pay computation',
-      'Tested the solution',
-      'Committed and pushed changes',
-      'Created Pull Request',
-      'Completed review and merge',
+      'Found and removed duplicate payroll deductions',
+      'Corrected Net Pay calculation logic',
+      'Updated Payslip API payloads for missing fields',
+      'Tested, submitted, and merged both Pull Requests',
     ],
-    skills: ['Backend Development', 'Debugging', 'Testing', 'Git'],
+    skills: ['Backend Development', 'API', 'Debugging', 'Testing'],
   },
   {
-    id: 'w3-july-03-payslip-api',
-    image: '/images/experience/aquila-softwares/week-3/july-03.jpg',
-    title: 'Payslip API & Display Fix',
-    date: 'July 3, 2026',
-    week: 3,
-    category: 'API Development',
-    overview:
-      'I fixed a payslip display issue by updating API responses to include required payroll and employee data, then validated results and submitted the fix.',
-    tasks: [
-      'Reviewed missing payload fields',
-      'Updated API response structure',
-      'Tested returned data and display behavior',
-      'Submitted and merged Pull Request',
-    ],
-    skills: ['API', 'Backend Development', 'Debugging', 'Testing'],
-  },
-  {
-    id: 'w4-july-07-tax-settings',
+    id: 'week-4',
     image: '/images/experience/aquila-softwares/week-4/july-07.jpg',
-    title: 'Scalable Payroll Tax Settings',
-    date: 'July 7, 2026',
+    title: 'Payroll Tax Settings & Field Testing',
+    date: 'July 7 – 9, 2026',
     week: 4,
-    category: 'Payroll Development',
+    category: 'Payroll & QA',
     overview:
-      'I enhanced Payroll Tax Settings to support scalable tax fields and added a default GSIS field while keeping the module extensible.',
+      'Week 4 mixed payroll feature work with on-site QA. I made Payroll Tax Settings scalable with a default GSIS field, joined ACS Dental System field testing at Mintal Hospital where we found a print-performance issue, and built Government Dues Override in Payroll Deductions.',
     tasks: [
-      'Made payroll tax fields scalable',
-      'Added default GSIS field',
-      'Kept feature flexible for future tax entries',
+      'Made payroll tax fields scalable and added a default GSIS field',
+      'Joined ACS Dental field testing at Mintal Hospital',
+      'Documented a print-button slowdown issue',
+      'Implemented Government Dues Override for payroll deductions',
     ],
-    skills: ['Payroll Development', 'Backend Logic'],
+    skills: ['Payroll Development', 'QA', 'Backend Development'],
   },
   {
-    id: 'w4-july-08-acs-testing',
-    image: '/images/experience/aquila-softwares/week-4/july-08.jpg',
-    title: 'ACS Dental System Field Testing',
-    date: 'July 8, 2026',
-    week: 4,
-    category: 'System Testing',
-    overview:
-      'I joined field testing at Mintal Hospital and helped identify a print-related performance issue. After returning, I continued Payroll Tax Settings enhancements.',
-    tasks: [
-      'Participated in field testing',
-      'Identified print-button slowdown issue',
-      'Documented observed behavior',
-      'Continued payroll enhancement implementation',
-    ],
-    skills: ['QA', 'Testing', 'Debugging'],
-  },
-  {
-    id: 'w4-july-09-dues-override',
-    image: '/images/experience/aquila-softwares/week-4/july-09.jpg',
-    title: 'Government Dues Override Development',
-    date: 'July 9, 2026',
-    week: 4,
-    category: 'Payroll Development',
-    overview:
-      'I developed Government Dues Override functionality in Payroll Deductions so administrators can adjust dues when needed.',
-    tasks: [
-      'Implemented override feature logic',
-      'Connected override behavior to deductions',
-      'Prepared feature for payroll processing',
-    ],
-    skills: ['Payroll Development', 'Backend Development'],
-  },
-  {
-    id: 'w5-july-17-uiux',
+    id: 'week-5',
     image: '/images/experience/aquila-softwares/week-5/july-17.jpg',
     title: 'Peplo UI/UX Enhancement',
     date: 'July 17, 2026',
     week: 5,
     category: 'UI/UX',
     overview:
-      'I collaborated with the team to improve Peplo design consistency, responsive behavior, layout organization, navigation, and overall user experience.',
+      'Week 5 shifted to product design. I worked with the team to improve Peplo’s visual consistency, responsive layout, navigation, and overall user experience so the interface felt clearer and easier to use.',
     tasks: [
-      'Improved layout consistency',
-      'Enhanced responsive behavior',
-      'Refined interface organization and navigation',
-      'Contributed to overall UX improvements',
+      'Improved layout and design consistency',
+      'Enhanced responsive behavior across screens',
+      'Refined navigation and interface organization',
+      'Contributed to overall UX polish',
     ],
     skills: ['UI/UX', 'Responsive Design', 'Frontend Development'],
   },
   {
-    id: 'w6-july-23-attendance',
+    id: 'week-6',
     image: '/images/experience/aquila-softwares/week-6/july-23.jpg',
     title: 'Attendance Management Development',
     date: 'July 23, 2026',
     week: 6,
     category: 'System Development',
     overview:
-      'I worked on Attendance Management subtasks, reviewed requirements, and completed three subtasks on day one before finishing remaining tasks the next day.',
+      'Week 6 was focused on Attendance Management. I reviewed five assigned subtasks, completed three on the first day, and prepared the remaining work for implementation and testing so attendance features could move forward.',
     tasks: [
-      'Reviewed five assigned subtasks',
-      'Implemented three subtasks initially',
-      'Prepared final tasks for completion and testing',
+      'Reviewed five Attendance Management subtasks',
+      'Implemented three subtasks on day one',
+      'Prepared remaining tasks for completion and testing',
     ],
     skills: ['System Development', 'Requirement Analysis'],
   },
   {
-    id: 'w7-july-28-api-validation',
+    id: 'week-7',
     image: '/images/experience/aquila-softwares/week-7/july-28.jpg',
-    title: 'API Testing & System Validation',
-    date: 'July 28, 2026',
+    title: 'API Validation & QA Automation Training',
+    date: 'July 28 – 31, 2026',
     week: 7,
-    category: 'API Testing',
+    category: 'QA',
     overview:
-      'I tested API responses and validated system behavior after team review to confirm stable API functionality and expected outputs.',
+      'Week 7 mixed testing and learning. I validated API responses after team review to confirm stable outputs, then attended QA automation training on how automated tests improve consistency and quality after software updates.',
     tasks: [
-      'Reviewed API functions and responses',
-      'Validated expected behavior',
-      'Checked for unexpected errors',
-      'Confirmed API stability',
+      'Reviewed API functions and response behavior',
+      'Checked for unexpected errors and confirmed API stability',
+      'Attended QA automation training',
+      'Learned how automation speeds repeated testing',
     ],
-    skills: ['API Testing', 'QA', 'System Validation'],
+    skills: ['API Testing', 'QA', 'Automation Testing'],
   },
   {
-    id: 'w7-july-31-qa-automation',
-    image: '/images/experience/aquila-softwares/week-7/july-31.jpg',
-    title: 'Quality Assurance Automation Training',
-    date: 'July 31, 2026',
-    week: 7,
-    category: 'Quality Assurance',
-    overview:
-      'I attended QA automation training and learned how automated testing improves efficiency, consistency, and software quality after updates.',
-    tasks: [
-      'Attended QA automation workshop',
-      'Learned repeated-test optimization through automation',
-      'Strengthened QA process understanding',
-    ],
-    skills: ['QA', 'Automation Testing', 'Software Testing'],
-  },
-  {
-    id: 'w8-aug5-bulk-entry',
+    id: 'week-8',
     image: '/images/experience/aquila-softwares/week-8/august-05.jpg',
-    title: 'Bulk Entry Bug Investigation',
-    date: 'August 5, 2026',
+    title: 'Bulk Entry Fixes & OJT Wrap-Up',
+    date: 'August 5 – 7, 2026',
     week: 8,
-    category: 'Bug Fixing',
+    category: 'QA & Completion',
     overview:
-      'I handled a QA ticket where employee lists disappeared after page refresh in Bulk Entry. I reproduced, diagnosed, fixed, retested, and submitted changes.',
+      'Week 8 closed the internship. I fixed a Bulk Entry bug where employee lists disappeared after refresh, rebased and resolved a follow-up QA issue before staging, then completed my last day with reflection on development, QA, Git workflow, and teamwork.',
     tasks: [
-      'Investigated QA ticket',
-      'Reproduced the issue',
-      'Reviewed employee-list behavior',
-      'Applied the fix',
-      'Retested feature',
-      'Pushed changes and created Pull Request',
+      'Reproduced and fixed the Bulk Entry refresh bug',
+      'Retested, pushed changes, and opened a Pull Request',
+      'Rebased, resolved a second QA issue, and helped move it to staging',
+      'Wrapped up OJT with final reflection and deliverables',
     ],
-    skills: ['Debugging', 'QA', 'Testing', 'Git'],
-  },
-  {
-    id: 'w8-aug6-qa-staging',
-    image: '/images/experience/aquila-softwares/week-8/august-06.jpg',
-    title: 'QA Verification & Staging',
-    date: 'August 6, 2026',
-    week: 8,
-    category: 'QA & Deployment Workflow',
-    overview:
-      'I rebased my branch, resolved another QA-reported Bulk Entry issue, retested the fix, and coordinated final QA confirmation before staging deployment.',
-    tasks: [
-      'Rebased with latest system changes',
-      'Reproduced and fixed QA-reported issue',
-      'Retested and returned to QA',
-      'Assisted in moving fix to staging',
-    ],
-    skills: ['Git', 'Rebase', 'QA', 'Debugging', 'Staging'],
-  },
-  {
-    id: 'w8-aug7-reflection',
-    image: '/images/experience/aquila-softwares/week-8/august-07.jpg',
-    title: 'OJT Completion & Final Reflection',
-    date: 'August 7, 2026',
-    week: 8,
-    category: 'OJT Completion',
-    overview:
-      'I completed my final OJT day at Aquila Softwares and wrapped up with gratitude, reflection, and documented learning across development, QA, workflow, and teamwork.',
-    tasks: [
-      'Prepared final internship wrap-up',
-      'Reviewed growth in software development and QA',
-      'Reflected on teamwork, deadlines, and communication',
-      'Completed internship deliverables',
-    ],
-    skills: ['Software Development', 'Teamwork', 'Professional Growth', 'Problem Solving'],
+    skills: ['Debugging', 'QA', 'Git', 'Professional Growth'],
   },
 ];
 
@@ -442,6 +252,7 @@ export function Experiences() {
 
   const openGallery = () => {
     lastFocusRef.current = document.activeElement as HTMLElement;
+    setSelectedWeek(0);
     setGalleryOpen(true);
   };
 
@@ -672,35 +483,10 @@ export function Experiences() {
                 </div>
               </div>
 
-              <div className="px-4 sm:px-6 pt-4 overflow-x-auto">
-                <div className="inline-flex gap-2 min-w-max pb-2">
-                  <button
-                    type="button"
-                    onClick={() => setSelectedWeek(0)}
-                    className={`px-3 py-1.5 rounded-full text-xs border transition-all ${
-                      selectedWeek === 0
-                        ? 'border-purple-400/60 bg-purple-500/20 text-purple-100 shadow-[0_0_14px_rgba(139,92,246,0.35)]'
-                        : 'border-white/10 bg-white/[0.02] text-gray-400 hover:text-white'
-                    }`}>
-                    All
-                  </button>
-                  {weekLabels.map((label, idx) => {
-                    const week = idx + 1;
-                    return (
-                      <button
-                        key={label}
-                        type="button"
-                        onClick={() => setSelectedWeek(week)}
-                        className={`px-3 py-1.5 rounded-full text-xs border transition-all ${
-                          selectedWeek === week
-                            ? 'border-purple-400/60 bg-purple-500/20 text-purple-100 shadow-[0_0_14px_rgba(139,92,246,0.35)]'
-                            : 'border-white/10 bg-white/[0.02] text-gray-400 hover:text-white'
-                        }`}>
-                        {label}
-                      </button>
-                    );
-                  })}
-                </div>
+              <div className="px-4 sm:px-6 pt-4">
+                <p className="text-xs text-gray-400">
+                  8 weeks · 1 photo each · click a week to read what happened
+                </p>
               </div>
 
               <div ref={galleryScrollRef} className="flex-1 overflow-y-auto px-4 sm:px-6 py-4">
@@ -711,7 +497,7 @@ export function Experiences() {
                     hidden: {},
                     visible: { transition: { staggerChildren: 0.05 } },
                   }}
-                  className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
+                  className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
                   {filteredStories.map((item) => (
                     <motion.button
                       key={item.id}
@@ -733,7 +519,7 @@ export function Experiences() {
                         />
                         <div className="absolute right-3 top-3 z-20 inline-flex items-center gap-1 rounded-full border border-white/20 bg-black/30 px-2 py-1 text-[10px] text-purple-100">
                           <Eye size={12} />
-                          View Story
+                          View Week
                         </div>
                       </div>
                       <div className="p-3.5 sm:p-4">
@@ -790,7 +576,7 @@ export function Experiences() {
                         else goTo(1);
                       }}>
                       <div className="px-4 sm:px-5 py-3 border-b border-white/10 bg-[#131024]/95 flex items-center justify-between">
-                        <p className="text-xs sm:text-sm text-gray-300">Experience Story Viewer</p>
+                        <p className="text-xs sm:text-sm text-gray-300">Week {activeStory.week} Story</p>
                         <button
                           type="button"
                           onClick={closeStory}
@@ -899,7 +685,7 @@ export function Experiences() {
                             onClick={() => goTo(-1)}
                             className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-gray-300 hover:text-white transition-colors">
                             <ChevronLeft size={15} />
-                            <span className="hidden sm:inline">Previous Story</span>
+                            <span className="hidden sm:inline">Previous Week</span>
                             <span className="sm:hidden">Previous</span>
                           </button>
                           <p className="text-xs sm:text-sm text-gray-400">
@@ -909,7 +695,7 @@ export function Experiences() {
                             type="button"
                             onClick={() => goTo(1)}
                             className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-gray-300 hover:text-white transition-colors">
-                            <span className="hidden sm:inline">Next Story</span>
+                            <span className="hidden sm:inline">Next Week</span>
                             <span className="sm:hidden">Next</span>
                             <ChevronRight size={15} />
                           </button>
