@@ -1,204 +1,67 @@
-import { useCallback, useEffect, useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
-import {
-  Trophy,
-  Rocket,
-  Layers,
-  Cpu,
-  Github,
-  ChevronLeft,
-  ChevronRight,
-  ArrowUpRight,
-  type LucideIcon,
-} from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { X } from 'lucide-react';
 
 type Achievement = {
-  icon: LucideIcon;
+  id: string;
   title: string;
+  issuer: string;
+  date: string;
   description: string;
-  number: string;
-  tone: string;
+  image: string;
 };
 
 const achievements: Achievement[] = [
   {
-    icon: Rocket,
-    number: '01',
-    title: '5+ Projects Shipped',
+    id: 'startup-bootcamp',
+    title: 'Startup Incubation Bootcamp',
+    issuer: 'NEMSU × DOST',
+    date: 'December 17–19, 2025',
     description:
-      'Built and published full applications across web, mobile, AI, and IoT — from concept to working demos.',
-    tone: 'from-[#1a1230] via-[#241848] to-[#120c22]',
+      'Completed Ignite and Incubate, a 3-day comprehensive startup incubation bootcamp in Tandag City.',
+    image: '/certificates/startup-bootcamp.png',
   },
   {
-    icon: Layers,
-    number: '02',
-    title: 'Full-Stack Delivery',
+    id: 'technical-workshop',
+    title: 'Technical Workshop Completion',
+    issuer: 'NEMSU College of ITE',
+    date: 'May 27–29, 2026',
     description:
-      'End-to-end experience with React, Node.js, Express, MongoDB, Flutter, and REST APIs in real project builds.',
-    tone: 'from-[#18122e] via-[#2a1850] to-[#100c1c]',
+      'Completed Graphics & Web Design, paperless software integration, Minecraft Education, and Advanced Microsoft Office.',
+    image: '/certificates/technical-workshop.png',
   },
   {
-    icon: Cpu,
-    number: '03',
-    title: 'AI & IoT Systems',
+    id: 'aquila-internship',
+    title: 'Back-End Developer Internship',
+    issuer: 'Aquila Softwares',
+    date: 'June 15 – August 7, 2026',
     description:
-      'Developed NEMSUTalks for AI sentiment analysis and FIREGUARD3 for real-time IoT fire monitoring.',
-    tone: 'from-[#14182e] via-[#1e2450] to-[#0e1020]',
-  },
-  {
-    icon: Github,
-    number: '04',
-    title: 'Open GitHub Portfolio',
-    description:
-      'Active repositories under R4zor08 showcasing CITEzen, WheelGo, WashGO, and more for public review.',
-    tone: 'from-[#1c1230] via-[#3a1850] to-[#120a1c]',
-  },
-  {
-    icon: Trophy,
-    number: '05',
-    title: 'Problem-Focused Builds',
-    description:
-      'Focused on practical campus and community tools — student concerns, bookings, rentals, and safety systems.',
-    tone: 'from-[#1c1620] via-[#3a2818] to-[#120e0c]',
+      'Completed 324 hours of internship as a Back-End Developer Intern with dedication and skill.',
+    image: '/certificates/aquila-internship.png',
   },
 ];
 
-const AUTOPLAY_MS = 4500;
-
-/** Cylindrical carousel math — cards sit on an invisible arc facing the viewer */
-function getCylinderStyle(
-  index: number,
-  active: number,
-  total: number,
-  compact: boolean
-) {
-  let dist = index - active;
-  if (dist > total / 2) dist -= total;
-  if (dist < -total / 2) dist += total;
-
-  const abs = Math.abs(dist);
-  const rotateY = dist * (compact ? -22 : -34);
-  const translateX = dist * (compact ? 48 : 62);
-  const translateZ = -Math.abs(dist) * (compact ? 70 : 110);
-  const scale = dist === 0 ? 1 : Math.max(compact ? 0.78 : 0.7, 1 - abs * (compact ? 0.1 : 0.13));
-  const opacity = dist === 0 ? 1 : Math.max(0, 1 - abs * (compact ? 0.42 : 0.34));
-  const brightness = dist === 0 ? 1 : Math.max(0.42, 1 - abs * 0.24);
-
-  return {
-    transform: `translate(-50%, -50%) translateX(${translateX}%) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
-    opacity,
-    zIndex: 40 - abs * 5,
-    filter: `brightness(${brightness})`,
-    pointerEvents: (abs <= (compact ? 1 : 2) ? 'auto' : 'none') as React.CSSProperties['pointerEvents'],
-  };
-}
-
-function AchievementMediaCard({
-  item,
-  isActive,
-}: {
-  item: Achievement;
-  isActive: boolean;
-}) {
-  const Icon = item.icon;
-
-  return (
-    <div
-      className={`relative h-full w-full overflow-hidden rounded-xl border transition-shadow duration-500 ${
-        isActive
-          ? 'border-purple-400/35 shadow-[0_18px_50px_rgba(76,29,149,0.35)]'
-          : 'border-white/10 shadow-[0_10px_28px_rgba(0,0,0,0.35)]'
-      }`}>
-      {/* Photo-like filled card surface */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${item.tone}`} />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(168,85,247,0.22),transparent_55%)]" />
-      <div
-        className="absolute inset-0 opacity-[0.07]"
-        style={{
-          backgroundImage:
-            'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
-          backgroundSize: '28px 28px',
-        }}
-      />
-
-      {/* Soft vignette like product photos */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
-
-      <div className="relative z-10 flex h-full flex-col p-4 sm:p-6">
-        <div className="flex items-start justify-between gap-2">
-          <div
-            className={`flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl sm:rounded-2xl border backdrop-blur-sm transition-all duration-400 ${
-              isActive
-                ? 'border-purple-300/40 bg-purple-500/20 text-purple-100 shadow-[0_0_22px_rgba(139,92,246,0.4)]'
-                : 'border-white/15 bg-white/5 text-purple-200/80'
-            }`}>
-            <Icon size={22} className="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
-          </div>
-          <span className="font-heading text-2xl sm:text-3xl font-bold text-white/10">{item.number}</span>
-        </div>
-
-        <div className="mt-auto">
-          <h3
-            className={`font-heading text-base sm:text-xl font-semibold leading-tight mb-1.5 sm:mb-2 ${
-              isActive ? 'text-white' : 'text-white/85'
-            }`}>
-            {item.title}
-          </h3>
-          <p
-            className={`text-xs sm:text-sm leading-relaxed line-clamp-3 ${
-              isActive ? 'text-gray-300' : 'text-gray-400/80'
-            }`}>
-            {item.description}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function Achievements() {
-  const reducedMotion = useReducedMotion();
-  const count = achievements.length;
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const [dragStart, setDragStart] = useState<number | null>(null);
-  const [compact, setCompact] = useState(false);
+  const [preview, setPreview] = useState<Achievement | null>(null);
 
   useEffect(() => {
-    const mq = window.matchMedia('(max-width: 639px)');
-    const sync = () => setCompact(mq.matches);
-    sync();
-    mq.addEventListener('change', sync);
-    return () => mq.removeEventListener('change', sync);
-  }, []);
-
-  const goTo = useCallback(
-    (next: number) => setIndex(((next % count) + count) % count),
-    [count]
-  );
-  const next = useCallback(() => goTo(index + 1), [goTo, index]);
-  const prev = useCallback(() => goTo(index - 1), [goTo, index]);
-
-  useEffect(() => {
-    if (paused || reducedMotion) return;
-    const id = window.setInterval(() => goTo(index + 1), AUTOPLAY_MS);
-    return () => window.clearInterval(id);
-  }, [paused, reducedMotion, index, goTo]);
-
-  const onPointerDown = (x: number) => setDragStart(x);
-  const onPointerUp = (x: number) => {
-    if (dragStart === null) return;
-    const dx = x - dragStart;
-    setDragStart(null);
-    if (Math.abs(dx) < 40) return;
-    if (dx < 0) next();
-    else prev();
-  };
+    if (!preview) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setPreview(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = previous;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [preview]);
 
   return (
     <section
       id="achievements"
-      className="section-padding relative overflow-x-clip bg-[#0b0614] select-none">
+      className="section-padding relative overflow-x-clip bg-[#0b0614]">
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div className="absolute top-0 left-1/4 w-72 h-72 bg-purple-600/10 rounded-full blur-[120px]" />
         <div className="absolute bottom-0 right-0 w-80 h-80 bg-violet-600/8 rounded-full blur-[130px]" />
@@ -210,7 +73,7 @@ export function Achievements() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mb-4 sm:mb-8 text-center">
+          className="mb-8 sm:mb-12 text-center">
           <h2
             className="font-heading font-bold text-white tracking-tight mb-3 sm:mb-4"
             style={{ fontSize: 'clamp(1.75rem, 5vw, 3rem)' }}>
@@ -219,89 +82,82 @@ export function Achievements() {
           <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent rounded-full mx-auto shadow-[0_0_12px_rgba(168,85,247,0.7)]" />
         </motion.div>
 
-        <div
-          className="relative"
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
-          onTouchStart={(e) => onPointerDown(e.touches[0].clientX)}
-          onTouchEnd={(e) => onPointerUp(e.changedTouches[0].clientX)}
-          onMouseDown={(e) => onPointerDown(e.clientX)}
-          onMouseUp={(e) => onPointerUp(e.clientX)}>
-          {/* Cylinder stage */}
-          <div className="relative mx-auto h-[300px] sm:h-[400px] md:h-[420px] w-full overflow-hidden">
-            <div
-              className="absolute inset-0 flex items-center justify-center"
-              style={{
-                perspective: reducedMotion ? undefined : compact ? '900px' : '1400px',
-                perspectiveOrigin: '50% 50%',
-              }}>
-              {achievements.map((item, i) => {
-                const style = getCylinderStyle(i, index, count, compact);
-                const isActive = i === index;
-
-                return (
-                  <div
-                    key={item.number}
-                    role="button"
-                    tabIndex={isActive ? 0 : -1}
-                    aria-label={item.title}
-                    aria-current={isActive}
-                    onClick={() => {
-                      if (i !== index) goTo(i);
-                    }}
-                    className="absolute left-1/2 top-1/2 h-[240px] w-[min(78vw,240px)] sm:h-[310px] sm:w-[280px] md:h-[330px] md:w-[300px] cursor-pointer [transform-style:preserve-3d] will-change-transform"
-                    style={{
-                      transform: style.transform,
-                      opacity: style.opacity,
-                      zIndex: style.zIndex,
-                      filter: style.filter,
-                      pointerEvents: style.pointerEvents,
-                      transition: reducedMotion
-                        ? 'opacity 0.2s ease'
-                        : 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.55s ease, filter 0.55s ease',
-                    }}>
-                    <AchievementMediaCard item={item} isActive={isActive} />
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Soft purple glow under active card */}
-            <div className="pointer-events-none absolute bottom-6 sm:bottom-8 left-1/2 h-8 sm:h-10 w-[min(55vw,240px)] -translate-x-1/2 rounded-[100%] bg-purple-500/35 blur-2xl" />
-            <div className="pointer-events-none absolute bottom-8 sm:bottom-10 left-1/2 h-3 sm:h-4 w-[min(40vw,160px)] -translate-x-1/2 rounded-[100%] bg-fuchsia-400/25 blur-xl" />
-          </div>
-
-          {/* Controls */}
-          <div className="relative z-20 -mt-1 sm:-mt-2 flex flex-wrap items-center justify-center gap-3 sm:gap-7 px-1">
-            <button
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+          {achievements.map((item, i) => (
+            <motion.button
+              key={item.id}
               type="button"
-              aria-label="Previous achievement"
-              onClick={prev}
-              className="flex h-11 w-11 items-center justify-center text-purple-300/80 transition-colors hover:text-purple-200">
-              <ChevronLeft size={26} strokeWidth={1.5} />
-            </button>
-
-            <a
-              href="#projects"
-              className="inline-flex items-center gap-2 rounded-full border border-purple-400/45 bg-transparent px-4 sm:px-6 py-2.5 text-sm font-medium text-purple-200 transition-all duration-300 hover:border-purple-300/70 hover:bg-purple-500/10 hover:shadow-[0_0_24px_rgba(139,92,246,0.25)]">
-              View Projects
-              <ArrowUpRight size={15} strokeWidth={1.75} />
-            </a>
-
-            <button
-              type="button"
-              aria-label="Next achievement"
-              onClick={next}
-              className="flex h-11 w-11 items-center justify-center text-purple-300/80 transition-colors hover:text-purple-200">
-              <ChevronRight size={26} strokeWidth={1.5} />
-            </button>
-          </div>
-
-          <p className="mt-3 sm:mt-4 text-center text-[11px] tracking-[0.2em] text-gray-500">
-            {String(index + 1).padStart(2, '0')} — {String(count).padStart(2, '0')}
-          </p>
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: i * 0.08 }}
+              onClick={() => setPreview(item)}
+              className="group text-left rounded-2xl overflow-hidden border border-white/10 bg-[#110c1a] shadow-[0_12px_32px_rgba(0,0,0,0.35)] transition-all duration-300 hover:-translate-y-1 hover:border-purple-400/45 hover:shadow-[0_18px_40px_rgba(109,40,217,0.22)] focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/60">
+              <div className="relative aspect-[16/11] bg-white">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="absolute inset-0 h-full w-full object-contain p-2"
+                />
+                <span className="absolute left-3 top-3 rounded-full bg-black/55 px-2.5 py-1 text-[10px] font-semibold tracking-[0.14em] text-white/90 backdrop-blur-sm">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+              </div>
+              <div className="px-4 py-3.5 sm:px-5 sm:py-4">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-purple-300">
+                  {item.issuer}
+                </p>
+                <h3 className="font-heading mt-1 text-base font-semibold text-white leading-snug group-hover:text-purple-100 transition-colors">
+                  {item.title}
+                </h3>
+                <p className="mt-1 text-xs text-gray-500">{item.date}</p>
+              </div>
+            </motion.button>
+          ))}
         </div>
       </div>
+
+      <AnimatePresence>
+        {preview && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[130] bg-black/80 backdrop-blur-md p-3 sm:p-6 flex items-center justify-center"
+            onClick={() => setPreview(null)}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.97 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-[min(100%,1100px)] max-h-[90dvh] overflow-y-auto rounded-2xl border border-purple-500/25 bg-[#0c0914] p-3 sm:p-5 shadow-[0_24px_80px_rgba(0,0,0,0.7)]">
+              <button
+                type="button"
+                aria-label="Close certificate"
+                onClick={() => setPreview(null)}
+                className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-black/50 text-gray-300 hover:text-white">
+                <X size={18} />
+              </button>
+              <img
+                src={preview.image}
+                alt={preview.title}
+                className="w-full max-h-[72dvh] object-contain rounded-lg bg-white"
+              />
+              <div className="mt-3 sm:mt-4 text-center px-2">
+                <h3 className="font-heading text-lg sm:text-xl font-semibold text-white">
+                  {preview.title}
+                </h3>
+                <p className="text-sm text-purple-300 mt-1">
+                  {preview.issuer} · {preview.date}
+                </p>
+                <p className="text-xs sm:text-sm text-gray-400 mt-2 max-w-2xl mx-auto">
+                  {preview.description}
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
