@@ -30,18 +30,6 @@ const projects: Project[] = [
     link: 'https://citezen-demo.vercel.app',
   },
   {
-    id: 'nemsutalks',
-    title: 'NEMSUTalks',
-    subtitle: 'AI Sentiment Analysis',
-    description:
-      'A Student Sentiment Analysis System that leverages AI to collect, analyze, and manage student feedback for better communication and decision-making.',
-    category: 'AI / SENTIMENT ANALYSIS',
-    image: '/2.png',
-    technologies: ['Python', 'Django', 'React.js', 'Tailwind CSS', 'NLP / AI'],
-    github: 'https://github.com/R4zor08/NEMSUTalks',
-    link: 'https://nemsutalks.vercel.app',
-  },
-  {
     id: 'fireguard3',
     title: 'FIREGUARD3',
     subtitle: 'IoT Fire Safety',
@@ -53,31 +41,6 @@ const projects: Project[] = [
     technologies: ['MongoDB', 'ExpressJS', 'React', 'Node.js'],
     github: 'https://github.com/R4zor08/FIREGUARD3',
     link: 'https://fireguard3.vercel.app',
-  },
-  {
-    id: 'wheelgo',
-    title: 'WheelGo',
-    subtitle: 'Car Rental Platform',
-    description:
-      'A Car Rental Management System that streamlines vehicle reservations and fleet management through a modern web application.',
-    category: 'WEB APP / CAR RENTAL',
-    image: '/wheelgo-screenshot.png',
-    logo: '/wheelgo-logo.png',
-    technologies: ['React.js', 'Tailwind CSS', 'Node.js', 'SQLite', 'REST API'],
-    github: 'https://github.com/R4zor08/WheelGo',
-    link: 'https://wheelgo.vercel.app',
-  },
-  {
-    id: 'washgo',
-    title: 'WashGO',
-    subtitle: 'Car Wash Booking App',
-    description:
-      'A Car Wash Booking Mobile App designed to simplify car wash appointments, service booking, customer management, and booking status tracking through a convenient mobile platform.',
-    category: 'MOBILE APP / BOOKING',
-    image: '/2.png',
-    technologies: ['Flutter', 'Dart', 'Node.js', 'Express', 'MongoDB'],
-    github: 'https://github.com/R4zor08/WashGO',
-    link: 'https://washgo.vercel.app',
   },
 ];
 
@@ -130,7 +93,10 @@ export function Projects() {
 
   const active = projects[index];
   const nextProjects = useMemo(
-    () => [1, 2].map((offset) => projects[(index + offset) % count]),
+    () =>
+      Array.from({ length: Math.min(2, Math.max(0, count - 1)) }, (_, i) =>
+        projects[(index + i + 1) % count]
+      ),
     [index, count]
   );
 
