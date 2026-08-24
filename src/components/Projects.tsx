@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, ExternalLink, Github } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 
 type Project = {
   id: string;
@@ -11,7 +11,6 @@ type Project = {
   image: string;
   logo?: string;
   link?: string;
-  github?: string;
   technologies: string[];
 };
 
@@ -37,7 +36,6 @@ const projects: Project[] = [
     image: '/citezen-screenshot.png',
     logo: '/citezen-logo.png',
     technologies: ['MongoDB', 'ExpressJS', 'React', 'Node.js'],
-    github: 'https://github.com/R4zor08/CITEzen',
     link: 'https://citezen-demo.vercel.app',
   },
   {
@@ -50,7 +48,6 @@ const projects: Project[] = [
     image: '/fireguard3-screenshot.png',
     logo: '/fireguard3-logo.png',
     technologies: ['MongoDB', 'ExpressJS', 'React', 'Node.js'],
-    github: 'https://github.com/R4zor08/FIREGUARD3',
     link: 'https://fireguard3.vercel.app',
   },
 ];
@@ -226,16 +223,6 @@ export function Projects() {
                         className="inline-flex items-center gap-2 rounded-full bg-white/90 px-4 sm:px-5 py-2.5 text-sm font-semibold text-[#120a1c] transition-all hover:bg-white hover:-translate-y-0.5">
                         See More
                         <ExternalLink size={14} />
-                      </a>
-                    )}
-                    {active.github && (
-                      <a
-                        href={active.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/30 px-4 py-2.5 text-sm font-medium text-gray-200 backdrop-blur-sm transition-all hover:border-purple-400/45 hover:text-white">
-                        <Github size={15} />
-                        GitHub
                       </a>
                     )}
                   </div>
