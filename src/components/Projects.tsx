@@ -17,6 +17,17 @@ type Project = {
 
 const projects: Project[] = [
   {
+    id: 'recordsync',
+    title: 'RecordSync',
+    subtitle: 'Smart Payroll Management',
+    description:
+      'A real-time payroll system with biometric attendance, automated processing, and multi-branch employee management for full control from check-in to payout.',
+    category: 'WEB APP / PAYROLL',
+    image: '/recordsync-screenshot.png',
+    technologies: ['React', 'Node.js', 'Biometric Integration', 'Cloud Sync'],
+    link: 'https://recordsync.vercel.app/',
+  },
+  {
     id: 'citezen',
     title: 'CITEzen',
     subtitle: 'Student Concern System',
