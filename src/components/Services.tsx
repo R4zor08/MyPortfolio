@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { useMemo } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import {
   Globe,
   Smartphone,
@@ -8,6 +9,8 @@ import {
   Database,
   type LucideIcon,
 } from 'lucide-react';
+import ScrollStack, { ScrollStackItem } from './ScrollStack';
+import { useMediaQuery } from '../hooks/useMediaQuery';
 
 type Service = {
   icon: LucideIcon;
@@ -16,6 +19,8 @@ type Service = {
   tags: string[];
   accent: string;
   iconGlow: string;
+  ring: string;
+  glow: string;
 };
 
 const services: Service[] = [
@@ -25,8 +30,10 @@ const services: Service[] = [
     description:
       'Building responsive, modern, and user-friendly websites using frontend and backend technologies.',
     tags: ['React', 'Node.js', 'REST APIs'],
-    accent: 'from-violet-500/15 via-transparent to-purple-600/5',
-    iconGlow: 'group-hover:shadow-[0_0_24px_rgba(139,92,246,0.45)]',
+    accent: 'from-violet-500/20 via-transparent to-purple-600/5',
+    iconGlow: 'shadow-[0_0_28px_rgba(139,92,246,0.35)]',
+    ring: 'from-violet-400/50',
+    glow: 'bg-violet-500/20',
   },
   {
     icon: Smartphone,
@@ -34,8 +41,10 @@ const services: Service[] = [
     description:
       'Creating mobile applications with clean interfaces and smooth user experiences.',
     tags: ['Flutter', 'Dart', 'Cross-platform'],
-    accent: 'from-purple-500/15 via-transparent to-fuchsia-600/5',
-    iconGlow: 'group-hover:shadow-[0_0_24px_rgba(168,85,247,0.45)]',
+    accent: 'from-purple-500/20 via-transparent to-fuchsia-600/5',
+    iconGlow: 'shadow-[0_0_28px_rgba(168,85,247,0.35)]',
+    ring: 'from-fuchsia-400/50',
+    glow: 'bg-fuchsia-500/20',
   },
   {
     icon: Layers,
@@ -43,8 +52,10 @@ const services: Service[] = [
     description:
       'Developing complete digital solutions from frontend design to backend logic and database management.',
     tags: ['Frontend', 'Backend', 'Databases'],
-    accent: 'from-indigo-500/15 via-transparent to-violet-600/5',
-    iconGlow: 'group-hover:shadow-[0_0_24px_rgba(99,102,241,0.4)]',
+    accent: 'from-indigo-500/20 via-transparent to-violet-600/5',
+    iconGlow: 'shadow-[0_0_28px_rgba(99,102,241,0.3)]',
+    ring: 'from-indigo-400/50',
+    glow: 'bg-indigo-500/20',
   },
   {
     icon: PenTool,
@@ -52,8 +63,10 @@ const services: Service[] = [
     description:
       'Designing clean, intuitive, and visually appealing interfaces focused on usability.',
     tags: ['Figma', 'Wireframes', 'Prototypes'],
-    accent: 'from-fuchsia-500/15 via-transparent to-purple-600/5',
-    iconGlow: 'group-hover:shadow-[0_0_24px_rgba(217,70,239,0.35)]',
+    accent: 'from-fuchsia-500/20 via-transparent to-purple-600/5',
+    iconGlow: 'shadow-[0_0_28px_rgba(217,70,239,0.28)]',
+    ring: 'from-pink-400/50',
+    glow: 'bg-pink-500/20',
   },
   {
     icon: Network,
@@ -61,8 +74,10 @@ const services: Service[] = [
     description:
       'Connecting applications with APIs to enable powerful features and seamless data flow.',
     tags: ['REST', 'JSON', 'Third-party'],
-    accent: 'from-cyan-500/10 via-transparent to-violet-600/5',
-    iconGlow: 'group-hover:shadow-[0_0_24px_rgba(6,182,212,0.3)]',
+    accent: 'from-cyan-500/15 via-transparent to-violet-600/5',
+    iconGlow: 'shadow-[0_0_28px_rgba(6,182,212,0.25)]',
+    ring: 'from-cyan-400/50',
+    glow: 'bg-cyan-500/20',
   },
   {
     icon: Database,
@@ -70,8 +85,10 @@ const services: Service[] = [
     description:
       'Organizing, managing, and connecting databases for reliable application performance.',
     tags: ['MySQL', 'MongoDB', 'SQLite'],
-    accent: 'from-emerald-500/10 via-transparent to-purple-600/5',
-    iconGlow: 'group-hover:shadow-[0_0_24px_rgba(16,185,129,0.3)]',
+    accent: 'from-emerald-500/15 via-transparent to-purple-600/5',
+    iconGlow: 'shadow-[0_0_28px_rgba(16,185,129,0.25)]',
+    ring: 'from-emerald-400/50',
+    glow: 'bg-emerald-500/20',
   },
 ];
 
@@ -80,62 +97,126 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
   const num = String(index + 1).padStart(2, '0');
 
   return (
-    <div className="glass-card glass-card-hover rounded-2xl sm:rounded-3xl p-6 sm:p-7 relative overflow-hidden group cursor-default flex flex-col h-full min-h-[280px] w-[min(85vw,340px)] sm:w-[320px] lg:w-[360px] shrink-0 snap-center">
+    <article className="service-stack-card group relative h-full w-full">
       <div
-        className={`absolute inset-0 bg-gradient-to-br ${service.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+        className={`pointer-events-none absolute -inset-px rounded-[1.5rem] sm:rounded-[1.75rem] lg:rounded-[2rem] bg-gradient-to-br ${service.ring} via-purple-500/10 to-transparent opacity-70`}
+        aria-hidden="true"
       />
-      <div className="absolute -top-16 -right-16 w-40 h-40 bg-purple-600/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="relative h-full overflow-hidden rounded-[1.45rem] sm:rounded-[1.7rem] lg:rounded-[1.95rem] border border-white/[0.1] bg-[#0c0916]/95 backdrop-blur-2xl shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
+        <div
+          className={`absolute inset-0 bg-gradient-to-br ${service.accent} opacity-80`}
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)',
+            backgroundSize: '32px 32px',
+          }}
+          aria-hidden="true"
+        />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-purple-300/50 to-transparent" />
+        <div
+          className={`absolute -top-20 -right-16 h-44 w-44 rounded-full blur-3xl ${service.glow} opacity-60`}
+          aria-hidden="true"
+        />
 
-      <div className="relative z-10 flex flex-col h-full">
-        <div className="flex items-start justify-between mb-5">
-          <span className="font-mono text-xs font-bold text-purple-500/50 group-hover:text-purple-400/70 transition-colors tracking-widest">
-            {num}
-          </span>
-          <div
-            className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center border border-purple-500/20 group-hover:bg-purple-500/20 group-hover:text-purple-300 group-hover:border-purple-500/40 transition-all duration-300 ${service.iconGlow}`}>
-            <Icon size={26} strokeWidth={1.75} />
+        <span
+          className="pointer-events-none absolute right-4 top-2 sm:right-5 sm:top-3 font-heading text-6xl sm:text-7xl lg:text-8xl font-bold text-white/[0.04] select-none"
+          aria-hidden="true">
+          {num}
+        </span>
+
+        <div className="relative z-10 flex min-h-[24rem] sm:min-h-[26rem] lg:min-h-[28rem] flex-col p-5 sm:p-7 md:p-9 lg:p-10">
+          <div className="mb-5 sm:mb-7 flex items-start justify-between gap-4 sm:gap-5">
+            <div className="min-w-0 flex-1">
+              <p className="mb-2 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.2em] text-purple-300/80">
+                Service {num}
+              </p>
+              <h3 className="font-heading text-xl sm:text-2xl lg:text-3xl font-semibold text-white leading-snug break-words">
+                {service.title}
+              </h3>
+            </div>
+            <div
+              className={`flex h-12 w-12 sm:h-14 sm:w-14 lg:h-16 lg:w-16 shrink-0 items-center justify-center rounded-2xl border border-purple-400/25 bg-purple-500/10 text-purple-200 ${service.iconGlow}`}
+              aria-hidden="true">
+              <Icon className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8" strokeWidth={1.75} />
+            </div>
+          </div>
+
+          <p className="mb-5 sm:mb-7 flex-grow text-sm sm:text-base lg:text-lg leading-relaxed text-gray-300/90">
+            {service.description}
+          </p>
+
+          <div className="mt-auto flex flex-wrap gap-2 sm:gap-2.5 border-t border-white/[0.08] pt-5 sm:pt-6">
+            {service.tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full border border-purple-400/20 bg-purple-500/[0.08] px-3 sm:px-3.5 py-1 text-[10px] sm:text-xs lg:text-sm font-medium text-purple-100/90">
+                {tag}
+              </span>
+            ))}
           </div>
         </div>
-
-        <h3 className="text-lg sm:text-xl font-heading font-semibold text-white mb-2.5 group-hover:text-purple-50 transition-colors">
-          {service.title}
-        </h3>
-
-        <p className="text-gray-500 text-sm leading-relaxed mb-5 flex-grow group-hover:text-gray-400 transition-colors">
-          {service.description}
-        </p>
-
-        <div className="flex flex-wrap gap-1.5 mt-auto pt-4 border-t border-white/5 group-hover:border-purple-500/15 transition-colors">
-          {service.tags.map((tag) => (
-            <span
-              key={tag}
-              className="text-[10px] sm:text-xs px-2.5 py-1 rounded-full bg-white/[0.04] text-gray-500 border border-white/8 group-hover:border-purple-500/25 group-hover:text-purple-300/80 transition-all duration-300 font-medium">
-              {tag}
-            </span>
-          ))}
-        </div>
       </div>
-    </div>
+    </article>
   );
 }
 
 export function Services() {
+  const reducedMotion = useReducedMotion();
+  const isMobile = useMediaQuery('(max-width: 639px)');
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
+
+  const stackConfig = useMemo(() => {
+    if (isMobile) {
+      return {
+        itemDistance: 72,
+        itemStackDistance: 18,
+        stackPosition: '16%',
+        endReleaseOffset: 32,
+        blurAmount: 0,
+        enableSmoothScroll: false,
+      };
+    }
+
+    if (isDesktop) {
+      return {
+        itemDistance: 96,
+        itemStackDistance: 28,
+        stackPosition: '20%',
+        endReleaseOffset: 48,
+        blurAmount: reducedMotion ? 0 : 1.5,
+        enableSmoothScroll: !reducedMotion,
+      };
+    }
+
+    return {
+      itemDistance: 84,
+      itemStackDistance: 24,
+      stackPosition: '18%',
+      endReleaseOffset: 40,
+      blurAmount: reducedMotion ? 0 : 1.25,
+      enableSmoothScroll: !reducedMotion,
+    };
+  }, [isMobile, isDesktop, reducedMotion]);
+
   return (
     <section
       id="services"
-      className="section-padding relative bg-[#0b0614] overflow-hidden">
-      {/* Ambient background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-0 w-full h-full opacity-20 mix-blend-screen">
+      className="relative overflow-x-clip bg-[#0b0614] pt-14 sm:pt-20 md:pt-24 pb-0">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute top-0 left-0 h-full w-full opacity-15 mix-blend-screen">
           <img
             src="/2.png"
             alt=""
             aria-hidden="true"
-            className="w-full h-full object-cover"
+            className="h-full w-full object-cover"
           />
         </div>
-        <div className="absolute top-1/3 -right-24 w-80 h-80 bg-violet-600/12 rounded-full blur-[130px]" />
-        <div className="absolute bottom-1/4 -left-24 w-72 h-72 bg-purple-600/12 rounded-full blur-[120px]" />
+        <div className="absolute top-1/4 -right-12 sm:-right-24 h-48 w-48 sm:h-80 sm:w-80 rounded-full bg-violet-600/12 blur-[90px] sm:blur-[130px]" />
+        <div className="absolute bottom-1/4 -left-12 sm:-left-24 h-44 w-44 sm:h-72 sm:w-72 rounded-full bg-purple-600/12 blur-[80px] sm:blur-[120px]" />
         <div
           className="absolute inset-0 opacity-[0.025]"
           style={{
@@ -144,54 +225,51 @@ export function Services() {
             backgroundSize: '48px 48px',
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0b0614]/60 via-transparent to-[#0b0614]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0b0614]/70 via-transparent to-[#0b0614]" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 relative z-10">
-        {/* Section header */}
+      <div className="relative z-10 mx-auto max-w-7xl px-3 sm:px-6 lg:px-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mb-10 sm:mb-12 text-center max-w-2xl mx-auto">
+          className="mx-auto mb-5 sm:mb-8 md:mb-10 max-w-2xl text-center px-1">
           <h2
-            className="font-heading font-bold text-white tracking-tight mb-4"
-            style={{ fontSize: 'clamp(2rem, 5vw, 3rem)' }}>
+            className="font-heading font-bold tracking-tight text-white"
+            style={{ fontSize: 'clamp(1.75rem, 4.5vw, 3rem)' }}>
             What I <span className="text-gradient">Do</span>
           </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent rounded-full mx-auto shadow-[0_0_12px_rgba(168,85,247,0.7)]" />
-          <p className="mt-4 text-xs text-gray-500 md:hidden tracking-wide">
-            Swipe to explore →
-          </p>
+          <div className="mx-auto mt-3 sm:mt-4 h-1 w-20 sm:w-24 rounded-full bg-gradient-to-r from-transparent via-purple-500 to-transparent shadow-[0_0_12px_rgba(168,85,247,0.7)]" />
         </motion.div>
 
-        {/* Horizontal scroll track */}
-        <div className="relative -mx-4 sm:-mx-6 md:-mx-12">
+        <div className="services-stack-stage relative">
           <div
-            className="overflow-x-auto pb-4 scrollbar-hide"
-            style={{
-              scrollbarWidth: 'none',
-              msOverflowStyle: 'none',
-              WebkitOverflowScrolling: 'touch',
-            }}>
-            <div className="flex gap-5 sm:gap-6 px-4 sm:px-6 md:px-12 snap-x snap-mandatory min-w-max">
-              {services.map((service, index) => (
-                <motion.div
-                  key={service.title}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-40px' }}
-                  transition={{ duration: 0.5, delay: index * 0.08 }}>
-                  <ServiceCard service={service} index={index} />
-                </motion.div>
-              ))}
-            </div>
-          </div>
+            className="pointer-events-none absolute left-1/2 top-[12%] sm:top-[16%] h-[min(60vw,360px)] sm:h-[min(70vw,460px)] w-[min(95vw,560px)] -translate-x-1/2 rounded-full bg-purple-600/10 blur-[70px] sm:blur-[100px]"
+            aria-hidden="true"
+          />
 
-          {/* Edge fade masks */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-8 sm:w-16 bg-gradient-to-r from-[#0b0614] to-transparent" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-8 sm:w-16 bg-gradient-to-l from-[#0b0614] to-transparent" />
+          <ScrollStack
+            key={`${isMobile}-${isDesktop}-${reducedMotion}`}
+            useWindowScroll
+            enableSmoothScroll={stackConfig.enableSmoothScroll}
+            className="services-scroll-stack"
+            itemDistance={stackConfig.itemDistance}
+            itemStackDistance={stackConfig.itemStackDistance}
+            stackPosition={stackConfig.stackPosition}
+            scaleEndPosition="10%"
+            baseScale={0.9}
+            itemScale={0.02}
+            blurAmount={stackConfig.blurAmount}
+            rotationAmount={0}
+            fitLastCardToEnd
+            endReleaseOffset={stackConfig.endReleaseOffset}>
+            {services.map((service, index) => (
+              <ScrollStackItem key={service.title} itemClassName="services-scroll-stack-item">
+                <ServiceCard service={service} index={index} />
+              </ScrollStackItem>
+            ))}
+          </ScrollStack>
         </div>
       </div>
     </section>
