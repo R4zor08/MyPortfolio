@@ -8,6 +8,7 @@ import {
   MapPin,
   Quote,
   ArrowUpRight,
+  FileText,
 } from 'lucide-react';
 import { PixelVanishAvatar } from './PixelVanishAvatar';
 
@@ -160,6 +161,16 @@ export function About() {
                     Philippines
                   </span>
                 </div>
+
+                <a
+                  href="/resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-purple-400/45 bg-purple-500/10 px-4 py-2 text-sm font-semibold text-purple-100 transition-all duration-300 hover:border-purple-300/70 hover:bg-purple-500/20 hover:shadow-[0_0_24px_rgba(139,92,246,0.25)] hover:-translate-y-0.5">
+                  <FileText size={15} />
+                  View Resume
+                  <ArrowUpRight size={14} />
+                </a>
 
                 {/* Stats row */}
                 <div className="w-full grid grid-cols-3 gap-1.5 sm:gap-2.5 md:gap-3 border-t border-white/[0.07] pt-5 sm:pt-6">
