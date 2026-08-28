@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import {
   Briefcase,
-  Sparkles,
   ArrowUpRight,
   X,
   Eye,
@@ -29,7 +28,7 @@ const weekLabels = ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8'];
 const internshipStories: StoryItem[] = [
   {
     id: 'week-1',
-    image: '/images/experience/aquila-softwares/week-1/june-15-01.jpg',
+    image: '/images/experience/aquila-softwares/week-1.jpg',
     title: 'Orientation, Assessment & Training Builds',
     date: 'June 15 – 19, 2026',
     week: 1,
@@ -46,7 +45,7 @@ const internshipStories: StoryItem[] = [
   },
   {
     id: 'week-2',
-    image: '/images/experience/aquila-softwares/week-2/june-23.jpg',
+    image: '/images/experience/aquila-softwares/week-2.jpg',
     title: 'First Company Project – Peplo HRIS',
     date: 'June 23 – 26, 2026',
     week: 2,
@@ -63,7 +62,7 @@ const internshipStories: StoryItem[] = [
   },
   {
     id: 'week-3',
-    image: '/images/experience/aquila-softwares/week-3/july-02.jpg',
+    image: '/images/experience/aquila-softwares/week-3.jpg',
     title: 'Payroll Net Pay & Payslip API Fixes',
     date: 'July 2 – 3, 2026',
     week: 3,
@@ -80,7 +79,7 @@ const internshipStories: StoryItem[] = [
   },
   {
     id: 'week-4',
-    image: '/images/experience/aquila-softwares/week-4/july-07.jpg',
+    image: '/images/experience/aquila-softwares/week-4.jpg',
     title: 'Payroll Tax Settings & Field Testing',
     date: 'July 7 – 9, 2026',
     week: 4,
@@ -97,7 +96,7 @@ const internshipStories: StoryItem[] = [
   },
   {
     id: 'week-5',
-    image: '/images/experience/aquila-softwares/week-5/july-17.jpg',
+    image: '/images/experience/aquila-softwares/week-5.jpg',
     title: 'Peplo UI/UX Enhancement',
     date: 'July 17, 2026',
     week: 5,
@@ -114,7 +113,7 @@ const internshipStories: StoryItem[] = [
   },
   {
     id: 'week-6',
-    image: '/images/experience/aquila-softwares/week-6/july-23.jpg',
+    image: '/images/experience/aquila-softwares/week-6.jpg',
     title: 'Attendance Management Development',
     date: 'July 23, 2026',
     week: 6,
@@ -130,7 +129,7 @@ const internshipStories: StoryItem[] = [
   },
   {
     id: 'week-7',
-    image: '/images/experience/aquila-softwares/week-7/july-28.jpg',
+    image: '/images/experience/aquila-softwares/week-7.jpg',
     title: 'API Validation & QA Automation Training',
     date: 'July 28 – 31, 2026',
     week: 7,
@@ -147,7 +146,7 @@ const internshipStories: StoryItem[] = [
   },
   {
     id: 'week-8',
-    image: '/images/experience/aquila-softwares/week-8/august-05.jpg',
+    image: '/images/experience/aquila-softwares/week-8.jpg',
     title: 'Bulk Entry Fixes & OJT Wrap-Up',
     date: 'August 5 – 7, 2026',
     week: 8,
@@ -195,7 +194,7 @@ function FocusableImage({
   const [broken, setBroken] = useState(false);
 
   return (
-    <div className="relative">
+    <div className="relative aspect-square w-full overflow-hidden bg-[#0e0a18]">
       {!loaded && !broken && <div className="absolute inset-0 animate-pulse bg-white/[0.04]" />}
       {!broken ? (
         <img
@@ -204,10 +203,10 @@ function FocusableImage({
           loading="lazy"
           onLoad={onLoad}
           onError={() => setBroken(true)}
-          className="w-full h-auto object-cover"
+          className="absolute inset-0 h-full w-full object-cover"
         />
       ) : (
-        <div className="aspect-[4/3] w-full bg-[#0e0a18] flex items-center justify-center text-xs text-gray-500 border-t border-white/10">
+        <div className="absolute inset-0 flex items-center justify-center text-xs text-gray-500">
           Documentation Photo
         </div>
       )}
@@ -234,6 +233,7 @@ export function Experiences() {
   const galleryRef = useRef<HTMLDivElement>(null);
   const storyRef = useRef<HTMLDivElement>(null);
   const galleryScrollRef = useRef<HTMLDivElement>(null);
+  const storyScrollRef = useRef<HTMLDivElement>(null);
   const galleryScrollPosRef = useRef(0);
   const swipeStartRef = useRef<number | null>(null);
 
@@ -288,12 +288,43 @@ export function Experiences() {
 
   useEffect(() => {
     if (!galleryOpen) return;
-    const previous = document.body.style.overflow;
+
+    const previousBody = document.body.style.overflow;
+    const previousHtml = document.documentElement.style.overflow;
     document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    window.dispatchEvent(new Event('portfolio:overlay-open'));
+
     return () => {
-      document.body.style.overflow = previous;
+      document.body.style.overflow = previousBody;
+      document.documentElement.style.overflow = previousHtml;
+      window.dispatchEvent(new Event('portfolio:overlay-close'));
     };
   }, [galleryOpen]);
+
+  useEffect(() => {
+    if (!galleryOpen) return;
+
+    const isolateScroll = (event: Event) => {
+      event.stopPropagation();
+    };
+
+    const scrollTargets = [galleryScrollRef.current, storyScrollRef.current].filter(
+      Boolean
+    ) as HTMLElement[];
+
+    scrollTargets.forEach((target) => {
+      target.addEventListener('wheel', isolateScroll, { passive: true });
+      target.addEventListener('touchmove', isolateScroll, { passive: true });
+    });
+
+    return () => {
+      scrollTargets.forEach((target) => {
+        target.removeEventListener('wheel', isolateScroll);
+        target.removeEventListener('touchmove', isolateScroll);
+      });
+    };
+  }, [galleryOpen, activeStory]);
 
   useEffect(() => {
     if (!activeStory) return;
@@ -363,10 +394,6 @@ export function Experiences() {
           viewport={{ once: true }}
           transition={{ duration: 0.35 }}
           className="mb-10 sm:mb-14 text-center">
-          <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-purple-400/25 bg-purple-500/[0.08] px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-purple-300">
-            <Sparkles size={11} />
-            OJT Journey
-          </div>
           <h2
             className="font-heading font-bold text-white tracking-tight mb-4"
             style={{ fontSize: 'clamp(2rem, 5vw, 3rem)' }}>
@@ -425,7 +452,7 @@ export function Experiences() {
                 ))}
               </div>
               <div className="relative z-10 inline-flex items-center gap-2 text-sm font-semibold text-purple-300 transition-colors group-hover:text-fuchsia-200">
-                Explore OJT Journey
+                View Experience
                 <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:translate-x-1" />
               </div>
             </button>
@@ -441,6 +468,7 @@ export function Experiences() {
             exit={reducedMotion ? {} : { opacity: 0 }}
             transition={{ duration: 0.26 }}
             className="fixed inset-0 z-[120] bg-black/70 backdrop-blur-md p-1.5 sm:p-4"
+            data-lenis-prevent
             aria-modal="true"
             role="dialog"
             aria-label="OJT Experience Gallery"
@@ -452,14 +480,15 @@ export function Experiences() {
               exit={reducedMotion ? {} : { opacity: 0, y: 12, scale: 0.985 }}
               transition={{ duration: 0.32 }}
               onClick={(e) => e.stopPropagation()}
-              className="mx-auto w-[min(100%,1320px)] h-[min(92dvh,900px)] max-h-[calc(100dvh-1rem)] rounded-2xl sm:rounded-3xl border border-purple-500/25 bg-[#0b0815] shadow-[0_24px_90px_rgba(0,0,0,0.7)] overflow-hidden flex flex-col relative">
-              <div className="relative px-3 sm:px-6 py-3.5 sm:py-5 border-b border-white/10 bg-[#120f1f]/95 backdrop-blur-xl">
+              className="mx-auto w-[min(100%,1320px)] h-[min(92dvh,900px)] max-h-[calc(100dvh-1rem)] rounded-2xl sm:rounded-3xl border border-purple-500/25 bg-[#0b0815] shadow-[0_24px_90px_rgba(0,0,0,0.7)] overflow-hidden flex flex-col relative"
+              data-lenis-prevent>
+              <div className="relative shrink-0 px-3 sm:px-6 py-3.5 sm:py-5 border-b border-white/10 bg-[#120f1f]/95 backdrop-blur-xl">
                 <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'linear-gradient(rgba(168,85,247,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(168,85,247,0.5) 1px, transparent 1px)', backgroundSize: '36px 36px' }} />
                 <div className="absolute -top-10 right-10 h-28 w-28 bg-purple-500/15 rounded-full blur-3xl pointer-events-none" />
                 <div className="relative flex items-start justify-between gap-3">
                   <div className="min-w-0 pr-2">
                     <p className="text-[10px] sm:text-xs tracking-[0.22em] uppercase text-purple-300 mb-1">
-                      OJT Journey
+                      Internship Gallery
                     </p>
                     <h3 className="font-heading text-xl sm:text-3xl font-bold text-white leading-tight">
                       Building. Testing. Learning.
@@ -483,13 +512,11 @@ export function Experiences() {
                 </div>
               </div>
 
-              <div className="px-4 sm:px-6 pt-4">
-                <p className="text-xs text-gray-400">
-                  8 weeks · 1 photo each · click a week to read what happened
-                </p>
-              </div>
 
-              <div ref={galleryScrollRef} className="flex-1 overflow-y-auto px-4 sm:px-6 py-4">
+              <div
+                ref={galleryScrollRef}
+                data-lenis-prevent
+                className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain px-4 sm:px-6 py-4 scrollbar-hide [-webkit-overflow-scrolling:touch]">
                 <motion.div
                   initial={reducedMotion ? false : 'hidden'}
                   animate="visible"
@@ -563,6 +590,7 @@ export function Experiences() {
                       exit={reducedMotion ? {} : { opacity: 0, scale: 0.985 }}
                       transition={{ duration: 0.28 }}
                       className="h-full rounded-2xl border border-purple-500/25 bg-[#0c0916] overflow-hidden flex flex-col"
+                      data-lenis-prevent
                       onClick={(e) => e.stopPropagation()}
                       onPointerDown={(e) => {
                         swipeStartRef.current = e.clientX;
@@ -585,9 +613,12 @@ export function Experiences() {
                         </button>
                       </div>
 
-                      <div className="flex-1 overflow-y-auto p-3 sm:p-5">
+                      <div
+                        ref={storyScrollRef}
+                        data-lenis-prevent
+                        className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain p-3 sm:p-5 scrollbar-hide [-webkit-overflow-scrolling:touch]">
                         <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] gap-4 sm:gap-6">
-                          <div className="rounded-xl sm:rounded-2xl overflow-hidden border border-purple-500/20 bg-[#06050b] relative">
+                          <div className="relative mx-auto w-full max-w-md overflow-hidden rounded-xl border border-purple-500/20 bg-[#06050b] aspect-square sm:rounded-2xl lg:mx-0 lg:max-w-none">
                             <img
                               src={activeStory.image}
                               alt={activeStory.title}
@@ -597,7 +628,7 @@ export function Experiences() {
                                 const sibling = target.nextElementSibling as HTMLElement | null;
                                 if (sibling) sibling.style.display = 'flex';
                               }}
-                              className="w-full h-auto max-h-[42dvh] lg:max-h-[74dvh] object-contain"
+                              className="absolute inset-0 h-full w-full object-cover"
                             />
                             <div className="hidden absolute inset-0 items-center justify-center text-xs text-gray-500">
                               Documentation Photo
