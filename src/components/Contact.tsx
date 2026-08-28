@@ -99,7 +99,7 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="section-padding relative bg-[#0b0614] overflow-hidden">
+      className="section-padding relative z-20 bg-[#0b0614] overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-0 w-full h-full opacity-15 mix-blend-screen -translate-y-1/2">
           <img src="/1.png" alt="" aria-hidden="true" className="w-full h-full object-cover" />
