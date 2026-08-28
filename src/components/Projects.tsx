@@ -159,16 +159,16 @@ export function Projects() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
             transition={{ duration: 0.55 }}
             className="mb-8 sm:mb-14 text-center">
-            <h2
-              className="font-heading font-bold text-white tracking-tight"
+          <h2
+            className="font-heading font-bold text-white tracking-tight"
               style={{ fontSize: 'clamp(1.75rem, 5vw, 3.5rem)' }}>
-              Featured <span className="text-gradient">Projects</span>
-            </h2>
-          </motion.div>
+            Featured <span className="text-gradient">Projects</span>
+          </h2>
+        </motion.div>
 
           <div className="grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] gap-6 sm:gap-8 lg:gap-10 min-h-0 lg:min-h-[520px] items-stretch">
             <div className="flex flex-col justify-between min-w-0 py-1 order-1">
@@ -297,7 +297,7 @@ export function Projects() {
                   </motion.button>
                 ))}
               </AnimatePresence>
-            </div>
+                </div>
           </div>
         </div>
       </div>
