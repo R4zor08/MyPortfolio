@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+ import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import {
   Briefcase,
