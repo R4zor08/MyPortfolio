@@ -117,20 +117,6 @@ export function Contact() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-12 sm:mb-16 text-center max-w-2xl mx-auto">
-          <h2
-            className="font-heading font-bold text-white tracking-tight mb-4"
-            style={{ fontSize: 'clamp(2rem, 5vw, 3rem)' }}>
-            Get In <span className="text-gradient">Touch</span>
-          </h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent rounded-full mx-auto shadow-[0_0_12px_rgba(168,85,247,0.7)]" />
-        </motion.div>
-
         <div className="grid lg:grid-cols-5 gap-6 lg:gap-8 items-start">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -144,12 +130,12 @@ export function Contact() {
 
               <div className="relative z-10">
                 <div className="mb-6">
-                  <h3 className="text-xl font-heading font-bold text-white">
-                    Ryan C. Llanto
-                  </h3>
-                  <p className="text-purple-400 text-sm font-medium">
-                    Web & App Developer
-                  </p>
+                  <h2
+                    className="font-heading font-bold text-white tracking-tight"
+                    style={{ fontSize: 'clamp(1.75rem, 4vw, 2.25rem)' }}>
+                    Get In <span className="text-gradient">Touch</span>
+                  </h2>
+                  <div className="mt-3 h-1 w-20 rounded-full bg-gradient-to-r from-transparent via-purple-500 to-transparent shadow-[0_0_12px_rgba(168,85,247,0.7)]" />
                 </div>
 
                 <div className="space-y-3">
