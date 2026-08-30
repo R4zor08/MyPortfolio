@@ -247,7 +247,6 @@ export function Services() {
           />
 
           <ScrollStack
-            key={`${isMobile}-${isDesktop}`}
             useWindowScroll
             className="services-scroll-stack"
             itemDistance={stackConfig.itemDistance}
