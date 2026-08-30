@@ -172,40 +172,37 @@ export function Services() {
   const stackConfig = useMemo(() => {
     if (isMobile) {
       return {
-        itemDistance: 72,
-        itemStackDistance: 18,
-        stackPosition: '16%',
-        endReleaseOffset: 32,
+        itemDistance: 80,
+        itemStackDistance: 22,
+        stackPosition: '17%',
+        endReleaseOffset: 220,
         blurAmount: 0,
-        enableSmoothScroll: false,
       };
     }
 
     if (isDesktop) {
       return {
-        itemDistance: 96,
-        itemStackDistance: 28,
-        stackPosition: '20%',
-        endReleaseOffset: 48,
+        itemDistance: 100,
+        itemStackDistance: 30,
+        stackPosition: '19%',
+        endReleaseOffset: 300,
         blurAmount: reducedMotion ? 0 : 1.5,
-        enableSmoothScroll: !reducedMotion,
       };
     }
 
     return {
-      itemDistance: 84,
-      itemStackDistance: 24,
+      itemDistance: 90,
+      itemStackDistance: 26,
       stackPosition: '18%',
-      endReleaseOffset: 40,
+      endReleaseOffset: 260,
       blurAmount: reducedMotion ? 0 : 1.25,
-      enableSmoothScroll: !reducedMotion,
     };
   }, [isMobile, isDesktop, reducedMotion]);
 
   return (
     <section
       id="services"
-      className="relative overflow-x-clip bg-[#0b0614] pt-14 sm:pt-20 md:pt-24 pb-0">
+      className="relative overflow-x-clip overflow-y-hidden bg-[#0b0614] pt-14 sm:pt-20 md:pt-24 pb-0 scroll-mt-24">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute top-0 left-0 h-full w-full opacity-15 mix-blend-screen">
           <img
@@ -234,7 +231,7 @@ export function Services() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mx-auto mb-5 sm:mb-8 md:mb-10 max-w-2xl text-center px-1">
+          className="mx-auto mb-4 sm:mb-6 md:mb-8 max-w-2xl text-center px-1">
           <h2
             className="font-heading font-bold tracking-tight text-white"
             style={{ fontSize: 'clamp(1.75rem, 4.5vw, 3rem)' }}>
@@ -250,19 +247,17 @@ export function Services() {
           />
 
           <ScrollStack
-            key={`${isMobile}-${isDesktop}-${reducedMotion}`}
+            key={`${isMobile}-${isDesktop}`}
             useWindowScroll
-            enableSmoothScroll={stackConfig.enableSmoothScroll}
             className="services-scroll-stack"
             itemDistance={stackConfig.itemDistance}
             itemStackDistance={stackConfig.itemStackDistance}
             stackPosition={stackConfig.stackPosition}
             scaleEndPosition="10%"
-            baseScale={0.9}
-            itemScale={0.02}
+            baseScale={0.88}
+            itemScale={0.025}
             blurAmount={stackConfig.blurAmount}
             rotationAmount={0}
-            fitLastCardToEnd
             endReleaseOffset={stackConfig.endReleaseOffset}>
             {services.map((service, index) => (
               <ScrollStackItem key={service.title} itemClassName="services-scroll-stack-item">
