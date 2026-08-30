@@ -1,5 +1,4 @@
 import {
-  useEffect,
   useLayoutEffect,
   useRef,
   useCallback,
@@ -42,6 +41,13 @@ export type ScrollStackProps = {
   onStackComplete?: () => void;
 };
 
+function readElementTop(element: HTMLElement, useWindowScroll: boolean) {
+  if (useWindowScroll) {
+    return element.getBoundingClientRect().top + window.scrollY;
+  }
+  return element.offsetTop;
+}
+
 const ScrollStack = ({
   children,
   className = '',
@@ -68,6 +74,7 @@ const ScrollStack = ({
   const endLayoutTopRef = useRef(0);
   const lastTransformsRef = useRef<Map<number, TransformState>>(new Map());
   const isUpdatingRef = useRef(false);
+  const isActiveRef = useRef(false);
 
   const calculateProgress = useCallback((scrollTop: number, start: number, end: number) => {
     if (scrollTop < start) return 0;
@@ -114,25 +121,14 @@ const ScrollStack = ({
       card.style.filter = 'none';
     });
 
-    if (useWindowScroll) {
-      const scrollY = window.scrollY;
-      cardLayoutTopsRef.current = cards.map((card) => {
-        const rect = card.getBoundingClientRect();
-        return rect.top + scrollY;
-      });
+    void scroller.offsetHeight;
 
-      const endElement = scroller.querySelector('.scroll-stack-end');
-      if (endElement) {
-        const rect = endElement.getBoundingClientRect();
-        endLayoutTopRef.current = rect.top + scrollY;
-      }
-    } else {
-      cardLayoutTopsRef.current = cards.map((card) => card.offsetTop);
-      const endElement = scroller.querySelector('.scroll-stack-end');
-      endLayoutTopRef.current = endElement
-        ? (endElement as HTMLElement).offsetTop
-        : 0;
-    }
+    cardLayoutTopsRef.current = cards.map((card) => readElementTop(card, useWindowScroll));
+
+    const endElement = scroller.querySelector('.scroll-stack-end');
+    endLayoutTopRef.current = endElement
+      ? readElementTop(endElement as HTMLElement, useWindowScroll)
+      : 0;
 
     cards.forEach((card, i) => {
       card.style.transform = savedStyles[i].transform;
@@ -301,18 +297,27 @@ const ScrollStack = ({
       card.style.transition = 'none';
     });
 
+    let remeasureTimer: number | undefined;
+    let resizeTimer: number | undefined;
+
     const remeasure = () => {
       measureLayoutPositions();
       updateCardTransforms();
     };
 
+    const scheduleRemeasure = () => {
+      window.clearTimeout(remeasureTimer);
+      remeasureTimer = window.setTimeout(remeasure, 80);
+    };
+
     remeasure();
     const nativeCleanup = setupScroll();
 
-    const rafRemeasure = requestAnimationFrame(remeasure);
-    const delayedRemeasure = window.setTimeout(remeasure, 250);
+    const rafRemeasure = requestAnimationFrame(scheduleRemeasure);
+    const delayedRemeasures = [250, 750, 1500, 3000].map((delay) =>
+      window.setTimeout(scheduleRemeasure, delay)
+    );
 
-    let resizeTimer: number | undefined;
     const onResize = () => {
       window.clearTimeout(resizeTimer);
       resizeTimer = window.setTimeout(() => {
@@ -321,29 +326,71 @@ const ScrollStack = ({
             card.style.marginBottom = `${itemDistance}px`;
           }
         });
-        remeasure();
+        scheduleRemeasure();
       }, 120);
+    };
+
+    const onLoad = () => scheduleRemeasure();
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) scheduleRemeasure();
     };
 
     const resizeObserver =
       typeof ResizeObserver !== 'undefined'
         ? new ResizeObserver(() => {
-            remeasure();
+            scheduleRemeasure();
           })
         : null;
 
     resizeObserver?.observe(scroller);
+    cards.forEach((card) => resizeObserver?.observe(card));
 
+    const intersectionObserver =
+      typeof IntersectionObserver !== 'undefined'
+        ? new IntersectionObserver(
+            ([entry]) => {
+              isActiveRef.current = entry.isIntersecting;
+              if (entry.isIntersecting) {
+                scheduleRemeasure();
+              }
+            },
+            { root: null, rootMargin: '50% 0px', threshold: 0 }
+          )
+        : null;
+
+    intersectionObserver?.observe(scroller);
+
+    const tick = () => {
+      if (isActiveRef.current || useWindowScroll) {
+        updateCardTransforms();
+      }
+      animationFrameRef.current = requestAnimationFrame(tick);
+    };
+    animationFrameRef.current = requestAnimationFrame(tick);
+
+    window.addEventListener('load', onLoad);
+    window.addEventListener('pageshow', onPageShow);
     window.addEventListener('resize', onResize, { passive: true });
     window.addEventListener('orientationchange', onResize, { passive: true });
+    window.visualViewport?.addEventListener('resize', onResize, { passive: true });
+
+    const fontsReady = document.fonts?.ready;
+    if (fontsReady) {
+      fontsReady.then(scheduleRemeasure).catch(() => undefined);
+    }
 
     return () => {
       cancelAnimationFrame(rafRemeasure);
-      window.clearTimeout(delayedRemeasure);
+      delayedRemeasures.forEach((timer) => window.clearTimeout(timer));
+      window.clearTimeout(remeasureTimer);
       nativeCleanup?.();
       resizeObserver?.disconnect();
+      intersectionObserver?.disconnect();
+      window.removeEventListener('load', onLoad);
+      window.removeEventListener('pageshow', onPageShow);
       window.removeEventListener('resize', onResize);
       window.removeEventListener('orientationchange', onResize);
+      window.visualViewport?.removeEventListener('resize', onResize);
       window.clearTimeout(resizeTimer);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
@@ -353,6 +400,7 @@ const ScrollStack = ({
         lenisRef.current = null;
       }
       stackCompletedRef.current = false;
+      isActiveRef.current = false;
       cardsRef.current = [];
       cardLayoutTopsRef.current = [];
       transformsCache.clear();
