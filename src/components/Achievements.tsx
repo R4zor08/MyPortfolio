@@ -39,6 +39,15 @@ const achievements: Achievement[] = [
       'Completed 324 hours of internship as a Back-End Developer Intern with dedication and skill.',
     image: '/certificates/aquila-internship.png',
   },
+  {
+    id: 'founders-forum',
+    title: 'Founders Forum: Navigating the Startup Journey',
+    issuer: 'NEMSU × DOST CARAGA',
+    date: 'August 29, 2026',
+    description:
+      'Certificate of Participation for actively joining the Founders Forum at NEMSU Tandag Campus, fostering innovation, entrepreneurship, and technology-driven learning.',
+    image: '/certificates/founders-forum.jpg',
+  },
 ];
 
 const AUTOPLAY_MS = 5500;
